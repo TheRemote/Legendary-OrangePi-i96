@@ -1,7 +1,7 @@
 # Legendary-OrangePi-i96
 Image that fixes the USB port on the Orange Pi i96 to use High Speed (480M) instead of Full Speed.<br>
 <br>
-Also upgrades you to Debian Bullseye!
+These also contained upgraded OS versions.  Debian Bullseye (11) and Ubuntu Focal (20.04.1) are available.<br>
 <br>
 <strong>You do not have to build this yourself.</strong>  Images are available <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/releases">here in the releases section</a>.<br>
 <br>

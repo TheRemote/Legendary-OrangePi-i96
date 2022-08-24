@@ -97,7 +97,7 @@ EOF
 }
 install_gpu_lib()
 {
-	if [ $DISTRO = "bionic" -o $DISTRO = "jammy" ]; then
+	if [ $DISTRO = "bionic" -o $DISTRO = "jammy" -o $DISTRO = "focal" ]; then
 	cat > "$DEST/type-phase" <<EOF
 #!/bin/bash
 
@@ -240,7 +240,7 @@ EOF
 }
 install_gstreamer()
 {
-	if [ $DISTRO = "bionic" -o $DISTRO = "jammy" ]; then 
+	if [ $DISTRO = "bionic" -o $DISTRO = "jammy" -o $DISTRO = "focal" ]; then 
 #	cp /etc/resolv.conf "$DEST/etc/resolv.conf"
 	cat > "$DEST/type-phase" << EOF
 #!/bin/bash -e
@@ -306,7 +306,7 @@ EOF
 	tar zxf $BUILD/build_for_${DISTRO}.tar.gz -C $BUILD
 	cp -rfa $BUILD/build/* $DEST/ 
 
-	if [ $DISTRO = "bionic" -o $DISTRO = "jammy" ]; then 
+	if [ $DISTRO = "bionic" -o $DISTRO = "jammy" -o $DISTRO = "focal" ]; then 
 		cp $DEST/usr/lib/gstreamer-1.0/* $DEST/usr/lib/aarch64-linux-gnu/gstreamer-1.0/ -rfa
 	fi
 	sync

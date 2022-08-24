@@ -185,7 +185,7 @@ select_distro() {
 	OPTION=$(whiptail --title "OrangePi Build System" \
 		--menu "$MENUSTR" 20 60 10 --cancel-button Finish --ok-button Select \
 		"0" "[$SOURCES]Change repository server" \
-		"1" "Ubuntu Jammy" \
+		"1" "Ubuntu Focal" \
 		"2" "Debian Bullseye" \
 		3>&1 1>&2 2>&3)
 
@@ -194,8 +194,8 @@ select_distro() {
 		select_sources
 		;;
 	"1")
-		DISTRO="jammy"
-		DISTRO_NUM="22.04.1"
+		DISTRO="focal"
+		DISTRO_NUM="20.04.4"
 		OS="ubuntu"
 		;;
 	"2")
