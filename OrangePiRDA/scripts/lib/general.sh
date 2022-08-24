@@ -195,7 +195,7 @@ select_distro() {
 		;;
 	"1")
 		DISTRO="focal"
-		DISTRO_NUM="20.04.4"
+		DISTRO_NUM="20.04.1"
 		OS="ubuntu"
 		;;
 	"2")
