@@ -19,4 +19,5 @@ cp -R Legendary-OrangePi-i96/OrangePiRDA/* OrangePiRDA/</pre>
 You may now build the image the same way I did!<br>
 Ubuntu is not building correctly yet.<br>
 <br>
+<h2>Credits</h2>
 <a href="https://forum.armbian.com/topic/3232-orange-pi-2g-iot/page/6/">Credit to Gabor Hidvegi for the patch itself</a> as I found his patch (which wasn't as effective for the 2G version as he would have liked due to the modem initialization dropping the speed) but for the regular i96 this patch is working as-is.
