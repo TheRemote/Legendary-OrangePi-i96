@@ -3,7 +3,7 @@
 build_rk_image()
 {
 	VER="v1.3"
-	IMAGENAME="OrangePi_${BOARD}_${OS}_${DISTRO}_${IMAGETYPE}_${KERNEL_NAME}_${VER}"
+	IMAGENAME="Legendary_OrangePi_${BOARD}_${OS}_${DISTRO}_${IMAGETYPE}"
 	IMAGE="$BUILD/images/$IMAGENAME.img"
 
 	if [ ! -d $BUILD/images ]; then
@@ -68,7 +68,8 @@ EOF
 	cd ${BUILD}/images/
 	rm -f ${IMAGENAME}.tar.gz
 	md5sum ${IMAGENAME}.img > ${IMAGENAME}.img.md5sum
-	tar czvf  ${IMAGENAME}.tar.gz $IMAGENAME.img*
+	#tar czvf  ${IMAGENAME}.tar.gz $IMAGENAME.img*
+	tar cf  ${IMAGENAME}.tar.gz --use-compress-program='xz -T8 -v -9' $IMAGENAME.img*
 	rm -f *.md5sum
 
 	sync
@@ -79,7 +80,7 @@ EOF
 build_rda_image()
 {
 	VER="v0.0.4"
-	IMAGENAME="OrangePi_${BOARD}_${OS}_${DISTRO}_${IMAGETYPE}_${KERNEL_NAME}_${VER}"
+	IMAGENAME="Legendary_OrangePi_${BOARD}_${OS}_${DISTRO}_${IMAGETYPE}"
 	IMAGE="${BUILD}/images/$IMAGENAME.img"
 
 	if [ ! -d ${BUILD}/images ]; then
@@ -165,7 +166,9 @@ EOF
 	cd ${BUILD}/images/ 
 	rm -f ${IMAGENAME}.tar.gz
 	md5sum ${IMAGENAME}.img > ${IMAGENAME}.img.md5sum
-	tar czvf  ${IMAGENAME}.tar.gz $IMAGENAME.img*
+	#tar czvf  ${IMAGENAME}.tar.gz $IMAGENAME.img*
+	tar cf  ${IMAGENAME}.tar.gz --use-compress-program='xz -T8 -v -9' $IMAGENAME.img*
+
 	rm -f *.md5sum
 
 	sync
@@ -181,7 +184,7 @@ build_image()
 		return
 	fi
 	VER="v1.0"
-	IMAGENAME="OrangePi_${BOARD}_${OS}_${DISTRO}_${IMAGETYPE}_${KERNEL_NAME}_${VER}"
+	IMAGENAME="Legendary_OrangePi_${BOARD}_${OS}_${DISTRO}_${IMAGETYPE}"
 	IMAGE="${BUILD}/images/$IMAGENAME.img"
 
 	if [ ! -d ${BUILD}/images ]; then
@@ -317,7 +320,8 @@ EOF
 	cd ${BUILD}/images/ 
 	rm -f ${IMAGENAME}.tar.gz
 	md5sum ${IMAGE} > ${IMAGE}.md5sum
-	tar czvf  ${IMAGENAME}.tar.gz $IMAGENAME.img*
+	#tar czvf  ${IMAGENAME}.tar.gz $IMAGENAME.img*
+	tar cf  ${IMAGENAME}.tar.gz --use-compress-program='xz -T8 -v -9' $IMAGENAME.img*
 	rm -f *.md5sum
 
 	sync

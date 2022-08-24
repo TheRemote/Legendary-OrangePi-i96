@@ -1,5 +1,5 @@
 #!/bin/bash
-
+# Compression - sudo tar cf Legendary_OrangePi_i96_debian_bullseye_server.img.xz --use-compress-program='xz -T8 -v -9' Legendary_OrangePi_i96_debian_bullseye_server.img
 set -e
 
 ROOT=`pwd`
