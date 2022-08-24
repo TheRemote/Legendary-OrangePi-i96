@@ -32,9 +32,9 @@ Ubuntu is not building correctly yet.<br>
 </ol>
 <h2>Credits</h2>
 The drama surrounding this board is ridiculous.  Is it a great board?  Not really.  It also costs like $7 on Amazon.  Is it a good board for $7?  Yes it is, especially in 2022 when Pis are routinely over $100.<br><br>
-This board honestly isn't more broken than any other boards were at release.  It just never got support and it was almost right from the start.  It never received support from Armbian and Orange Pi has never supported it either.<br><br>
-What hope is there then?  The community basically.  This image is just a compilation of fixes from people who dreamed of something better for the board and submitted PRs or fixes around the internet.<br><br>
-This image is simply putting all of the community's work together and updating the OS to a newer version so we can pretend Orange Pi / Armbian wanted to support it.  You'll have to judge for yourself if it's enough.<br><br>
+This board honestly isn't more broken than any other boards were at release.  It just never got support and it was almost right from the start.  It never received support from Armbian and Orange Pi has never supported it either (I mean most of the fixes in this were submitted to their official repository years ago with no response).<br><br>
+What hope is there then?  The community basically.  This image is just a compilation of fixes from people who dreamed of something better for the board and submitted PRs or fixes around the internet as well as patching Orange Pi's imaging tool to produce images that aren't literally 5 years outdated (although the kernel still is).<br><br>
+Is it enough?  You'll have to judge for yourself if it's enough but it is enough to make this a decent headless Bullseye board with one working high speed USB 2.0 port.  The original ones really weren't which is why this was born.<br><br>
 <br>
 <a href="https://forum.armbian.com/topic/3232-orange-pi-2g-iot/page/6/">Credit to Gabor Hidvegi for the patch itself</a> as I found his patch (which wasn't as effective for the 2G version as he would have liked due to the modem initialization dropping the speed) but for the regular i96 this patch is working as-is.<br>
 <a href="https://github.com/orangepi-xunlong/OrangePiRDA_kernel/pull/2">Credit to GMMan</a> for the pull request on the official repository to fix sound playback kernel parameter issues<br>
