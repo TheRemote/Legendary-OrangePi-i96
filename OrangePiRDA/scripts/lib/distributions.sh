@@ -335,8 +335,8 @@ EOF
 deb ${SOURCES} ${release}-updates main contrib non-free
 #deb-src ${SOURCES} ${release}-updates main contrib non-free
 
-deb http://security.debian.org/ ${release}/updates main contrib non-free
-#deb-src http://security.debian.org/ ${release}/updates main contrib non-free
+deb http://security.debian.org/ ${release}-security main contrib non-free
+#deb-src http://security.debian.org/ ${release}-security main contrib non-free
 EOF
 }
 
@@ -419,7 +419,7 @@ prepare_env()
 		                        SOURCES="http://httpredir.debian.org/debian"
 		                        ;;
 		                "OFCL")
-		                        SOURCES="http://ftp2.debian.org/debian"
+		                        SOURCES="http://ftp.debian.org/debian"
 		                        ;;
 		                "CN")
 		                        SOURCES="http://ftp2.cn.debian.org/debian"
