@@ -484,9 +484,7 @@ export DEBIAN_FRONTEND=noninteractive
 locale-gen en_US.UTF-8
 
 apt-get -y update
-apt-get -y install dosfstools curl xz-utils iw rfkill ifupdown
-apt-get -y install wpasupplicant openssh-server alsa-utils
-apt-get -y install rsync u-boot-tools vim
+apt-get -y install dosfstools curl xz-utils iw rfkill ifupdown wpasupplicant openssh-server alsa-utils rsync u-boot-tools vim
 apt-get -y install parted network-manager git autoconf gcc libtool
 apt-get -y install libsysfs-dev pkg-config libdrm-dev xutils-dev hostapd
 apt-get -y install dnsmasq apt-transport-https man subversion
