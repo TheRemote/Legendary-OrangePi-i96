@@ -469,7 +469,7 @@ prepare_rootfs_server()
 	elif [ "$DISTRO" = "sid" -o "$DISTRO" = "stretch" -o "$DISTRO" = "stable" -o "$DISTRO" = "bullseye" ]; then
 		DEB=debian
 		DEBUSER=orangepi
-		EXTRADEBS="sudo gpg net-tools g++ libjpeg-dev usbutils curl"
+		EXTRADEBS=""
 		ADDPPACMD=
 		DISPTOOLCMD=
 	else
@@ -489,8 +489,7 @@ echo "locales locales/locales_to_be_generated multiselect en_US.UTF-8 UTF-8" | d
 rm -f "/etc/locale.gen"
 dpkg-reconfigure --frontend noninteractive locales
 
-apt-get -y install dosfstools curl xz-utils iw rfkill ifupdown wpasupplicant openssh-server rsync u-boot-tools vim parted network-manager git autoconf gcc libtool ntp
-apt-get -y install libsysfs-dev pkg-config libdrm-dev xutils-dev hostapd alsa-utils
+apt-get -y install sudo gpg net-tools g++ libjpeg-dev usbutils curl dosfstools curl xz-utils iw rfkill ifupdown wpasupplicant openssh-server rsync u-boot-tools vim parted network-manager git autoconf gcc libtool ntp libsysfs-dev pkg-config libdrm-dev xutils-dev hostapd alsa-utils
 apt-get -y install dnsmasq apt-transport-https man subversion
 apt-get -y install imagemagick libv4l-dev cmake bluez
 apt-get -y install $EXTRADEBS
