@@ -494,7 +494,6 @@ apt-get -y install libsysfs-dev pkg-config libdrm-dev xutils-dev hostapd alsa-ut
 apt-get -y install dnsmasq apt-transport-https man subversion
 apt-get -y install imagemagick libv4l-dev cmake bluez
 apt-get -y install $EXTRADEBS
-apt-get purge alsa-utils -y
 
 apt-get install -f
 
