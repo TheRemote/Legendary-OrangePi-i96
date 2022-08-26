@@ -4,6 +4,7 @@ Image that fixes the USB port on the Orange Pi i96 to use High Speed (480M) inst
 These also contained upgraded OS versions.  Debian Bullseye (11) is available.<br>
 <br>
 <strong>You do not have to build this yourself.</strong>  Images are available <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/releases">here in the releases section</a>.<br>
+My blog post that birthed this image is located<a href="https://jamesachambers.com/orange-pi-i96-getting-started-guide/">here on jamesachambers.com</a>.<br>
 <br>
 <h2>Fixes</h2>
 <ol>
