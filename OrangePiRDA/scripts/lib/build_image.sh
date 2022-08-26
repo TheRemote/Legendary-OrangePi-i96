@@ -66,10 +66,10 @@ EOF
 	dd if=${IMAGE}2 of=$IMAGE seek=$ROOTFS_START conv=notrunc,fsync
 	rm -f ${IMAGE}2
 	cd ${BUILD}/images/
-	rm -f ${IMAGENAME}.tar.gz
+	rm -f ${IMAGENAME}.tar.xz
 	md5sum ${IMAGENAME}.img > ${IMAGENAME}.img.md5sum
 	#tar czvf  ${IMAGENAME}.tar.gz $IMAGENAME.img*
-	tar cf  ${IMAGENAME}.tar.gz --use-compress-program='xz -T8 -v -9' $IMAGENAME.img*
+	tar cf  ${IMAGENAME}.tar.xz --use-compress-program='xz -T8 -v -9' $IMAGENAME.img*
 	rm -f *.md5sum
 
 	sync
@@ -164,10 +164,10 @@ w
 EOF
 
 	cd ${BUILD}/images/ 
-	rm -f ${IMAGENAME}.tar.gz
+	rm -f ${IMAGENAME}.tar.xz
 	md5sum ${IMAGENAME}.img > ${IMAGENAME}.img.md5sum
 	#tar czvf  ${IMAGENAME}.tar.gz $IMAGENAME.img*
-	tar cf  ${IMAGENAME}.tar.gz --use-compress-program='xz -T8 -v -9' $IMAGENAME.img*
+	tar cf  ${IMAGENAME}.tar.xz --use-compress-program='xz -T8 -v -9' $IMAGENAME.img*
 
 	rm -f *.md5sum
 
@@ -318,10 +318,10 @@ w
 EOF
 
 	cd ${BUILD}/images/ 
-	rm -f ${IMAGENAME}.tar.gz
+	rm -f ${IMAGENAME}.tar.xz
 	md5sum ${IMAGE} > ${IMAGE}.md5sum
 	#tar czvf  ${IMAGENAME}.tar.gz $IMAGENAME.img*
-	tar cf  ${IMAGENAME}.tar.gz --use-compress-program='xz -T8 -v -9' $IMAGENAME.img*
+	tar cf  ${IMAGENAME}.tar.xz --use-compress-program='xz -T8 -v -9' $IMAGENAME.img*
 	rm -f *.md5sum
 
 	sync
