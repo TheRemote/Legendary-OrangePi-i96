@@ -2,7 +2,7 @@
 
 build_rk_image()
 {
-	VER="v1.1"
+	VER="v1.2"
 	IMAGENAME="Legendary_OrangePi_${BOARD}_${OS}_${DISTRO}_${IMAGETYPE}_${VER}"
 	IMAGE="$BUILD/images/$IMAGENAME.img"
 
@@ -79,7 +79,7 @@ EOF
 
 build_rda_image()
 {
-	VER="v1.1"
+	VER="v1.2"
 	IMAGENAME="Legendary_OrangePi_${BOARD}_${OS}_${DISTRO}_${IMAGETYPE}_${VER}"
 	IMAGE="${BUILD}/images/$IMAGENAME.img"
 
@@ -183,7 +183,7 @@ build_image()
 		build_rda_image
 		return
 	fi
-	VER="v1.1"
+	VER="v1.2"
 	IMAGENAME="Legendary_OrangePi_${BOARD}_${OS}_${DISTRO}_${IMAGETYPE}_${VER}"
 	IMAGE="${BUILD}/images/$IMAGENAME.img"
 

@@ -481,10 +481,15 @@ prepare_rootfs_server()
 	cat > "$DEST/second-phase" <<EOF
 #!/bin/bash
 export DEBIAN_FRONTEND=noninteractive
-locale-gen en_US.UTF-8
 
 apt-get -y update
-apt-get -y install dosfstools curl xz-utils iw rfkill ifupdown wpasupplicant openssh-server rsync u-boot-tools vim parted network-manager git autoconf gcc libtool 
+apt-get -y install locales
+echo "locales locales/default_environment_locale select en_US.UTF-8" | debconf-set-selections
+echo "locales locales/locales_to_be_generated multiselect en_US.UTF-8 UTF-8" | debconf-set-selections
+rm -f "/etc/locale.gen"
+dpkg-reconfigure --frontend noninteractive locales
+
+apt-get -y install dosfstools curl xz-utils iw rfkill ifupdown wpasupplicant openssh-server rsync u-boot-tools vim parted network-manager git autoconf gcc libtool ntp
 apt-get -y install libsysfs-dev pkg-config libdrm-dev xutils-dev hostapd alsa-utils
 apt-get -y install dnsmasq apt-transport-https man subversion
 apt-get -y install imagemagick libv4l-dev cmake bluez
@@ -508,6 +513,7 @@ usermod -a -G video $DEBUSER
 usermod -a -G plugdev $DEBUSER
 apt-get -y autoremove
 apt-get clean
+ntpd -gq
 EOF
 	chmod +x "$DEST/second-phase"
 	do_chroot /second-phase

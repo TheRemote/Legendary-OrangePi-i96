@@ -27,6 +27,7 @@ Ubuntu is not building correctly yet.<br>
 <br>
 <h2>Version History</h2>
 <ol>
+  <li>August 26th 2022 - V1.2 - Added ntp package to help with time issues (use "sudo ntpd -gq" on first startup), fix locales</li>
   <li>August 24th 2022 - V1.1 - Added sound fix and UART fix from official OrangePi repository pull requests</li>
   <li>August 23rd 2022 - V1.0 - Initial Release</li>
 </ol>
