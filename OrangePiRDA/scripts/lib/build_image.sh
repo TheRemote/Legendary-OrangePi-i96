@@ -242,7 +242,7 @@ build_image()
 			if [ ${PLATFORM} = "OrangePiH6_mainline" ];then
 				cp -rfa ${BUILD}/kernel/Image_${BOARD} ${BUILD}/kernel/Image
 				mcopy -m -i ${IMAGE}1 ${BUILD}/kernel/Image ::
-			elif [ ${PLATFORM}= "OrangePiH3_mainline" ];then 
+			elif [ ${PLATFORM} = "OrangePiH3_mainline" ];then 
 				cp -rfa ${BUILD}/kernel/zImage_${BOARD} ${BUILD}/kernel/zImage
 				mcopy -m -i ${IMAGE}1 ${BUILD}/kernel/zImage ::
 			fi
