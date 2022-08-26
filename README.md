@@ -8,6 +8,8 @@ My blog post that birthed this image is located<a href="https://jamesachambers.c
 <br>
 <h2>Fixes</h2>
 <ol>
+  <li>Adding missing default locales that would cause Perl to throw lots of warnings every time a package was configured</li>
+  <li>Added ntp to assist with fixing time on first startup -- use "sudo ntpd -gq" to force a time sync once you've set your correct timezone (sudo dpkg-reconfigure tzdata)</li>
   <li>Fixed USB port to allow "High Speed" USB devices instead of locking them to "Full Speed"</li>
   <li>Fixed buggy UART not resetting properly which often breaks copying/pasting through a serial terminal</li>
   <li>Fixed sound issues that would prevent rebooting the system successfully after first startup</li>
