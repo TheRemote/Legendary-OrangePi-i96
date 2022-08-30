@@ -484,9 +484,7 @@ echo "locales locales/locales_to_be_generated multiselect en_US.UTF-8 UTF-8" | d
 rm -f "/etc/locale.gen"
 dpkg-reconfigure --frontend noninteractive locales
 
-apt-get -y install sudo gpg net-tools g++ libjpeg-dev usbutils curl dosfstools curl xz-utils iw rfkill ifupdown wpasupplicant openssh-server rsync u-boot-tools vim parted network-manager git autoconf gcc libtool ntp libsysfs-dev pkg-config libdrm-dev xutils-dev hostapd alsa-utils
-apt-get -y install dnsmasq apt-transport-https man subversion
-apt-get -y install imagemagick libv4l-dev cmake bluez
+apt-get -y install sudo imagemagick libv4l-dev cmake bluez dnsmasq apt-transport-https man subversion python3-pip python3-setuptools gpg net-tools g++ libjpeg-dev usbutils curl dosfstools curl xz-utils iw rfkill ifupdown wpasupplicant openssh-server rsync u-boot-tools vim parted network-manager git autoconf gcc libtool ntp libsysfs-dev pkg-config libdrm-dev xutils-dev hostapd alsa-utils
 apt-get -y install $EXTRADEBS
 
 apt-get install -f
@@ -620,8 +618,8 @@ EOF
 		chmod +x "$DEST/usr/local/sbin/gpio_fixup.sh"
 		curl -k -L -o "$DEST/usr/local/bin/opio" https://wiki.pbeirne.com/patb/opio/raw/master/opio
 		chmod +x "$DEST/usr/local/bin/opio"
-		ln -s "$DEST/usr/local/bin/opio" "$DEST/usr/local/bin/gpio"
-		curl -k -L -o "$DEST/usr/local/bin/devmem2.py" https://wiki.pbeirne.com/patb/i96/src/master/devmem2.py
+		cp "$DEST/usr/local/bin/opio" "$DEST/usr/local/bin/gpio"
+		curl -k -L -o "$DEST/usr/local/bin/devmem2.py" https://wiki.pbeirne.com/patb/i96/raw/master/devmem2.py
 		chmod +x "$DEST/usr/local/bin/devmem2.py"
 		cat >"$DEST/lib/systemd/system/gpio_fixup.service" <<EOF
 [Unit]
