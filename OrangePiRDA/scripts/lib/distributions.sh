@@ -1,9 +1,8 @@
 #!/bin/bash
 
-install_xfce_desktop()
-{
- 	cp /etc/resolv.conf "$DEST/etc/resolv.conf"
-	cat > "$DEST/type-phase" <<EOF
+install_xfce_desktop() {
+	cp /etc/resolv.conf "$DEST/etc/resolv.conf"
+	cat >"$DEST/type-phase" <<EOF
 #!/bin/bash
 export DEBIAN_FRONTEND=noninteractive
 apt-get -y install systemctl xorg xfce4 xfce4-goodies vlc network-manager-gnome
@@ -12,15 +11,14 @@ apt-get -y autoremove
 apt-get clean
 
 EOF
-        chmod +x "$DEST/type-phase"
-        do_chroot /type-phase
+	chmod +x "$DEST/type-phase"
+	do_chroot /type-phase
 	sync
 	rm -f "$DEST/type-phase"
 	rm -f "$DEST/etc/resolv.conf"
 }
 
-install_lxde_desktop()
-{
+install_lxde_desktop() {
 	_user="orangepi"
 	_auto="-y -q"
 	if [ $DISTRO = "bionic" -o $DISTRO = "xenial" -o $DISTRO = "jammy" -o $DISTRO = "focal" ]; then
@@ -29,7 +27,7 @@ install_lxde_desktop()
 		_DST=Debian
 	fi
 	cp /etc/resolv.conf "$DEST/etc/resolv.conf"
-	cat > "$DEST/type-phase" <<EOF
+	cat >"$DEST/type-phase" <<EOF
 #!/bin/bash
 
 echo ""
@@ -123,7 +121,7 @@ chown -R $_user:$_user /home/$_user
 
 EOF
 	chmod +x "$DEST/type-phase"
- 	do_chroot /type-phase
+	do_chroot /type-phase
 	sync
 	rm -f "$DEST/type-phase"
 	rm -f "$DEST/etc/resolv.conf"
@@ -154,12 +152,12 @@ deboostrap_rootfs() {
 	rm -f $KR
 
 	# keeping things clean as this is copied later again
-#	rm -f rootfs/usr/bin/qemu-arm-static
-       if [ $ROOTFS_ARCH = "arm64" ]; then 
-               rm -f rootfs/usr/bin/qemu-aarch64-static
-       elif [ $ROOTFS_ARCH = "armhf" ]; then
-               rm -f rootfs/usr/bin/qemu-arm-static
-       fi
+	#	rm -f rootfs/usr/bin/qemu-arm-static
+	if [ $ROOTFS_ARCH = "arm64" ]; then
+		rm -f rootfs/usr/bin/qemu-aarch64-static
+	elif [ $ROOTFS_ARCH = "armhf" ]; then
+		rm -f rootfs/usr/bin/qemu-arm-static
+	fi
 
 	bsdtar -C $TEMP/rootfs -a -cf $tgz .
 	rm -fr $TEMP/rootfs
@@ -169,12 +167,12 @@ deboostrap_rootfs() {
 
 do_chroot() {
 	# Add qemu emulation.
-#	cp /usr/bin/qemu-arm-static "$DEST/usr/bin"
-       if [ $ARCH = "arm64" ]; then
-               cp /usr/bin/qemu-aarch64-static "$DEST/usr/bin"
-       elif [ $ARCH = "arm" ]; then
-               cp /usr/bin/qemu-arm-static "$DEST/usr/bin"
-       fi
+	#	cp /usr/bin/qemu-arm-static "$DEST/usr/bin"
+	if [ $ARCH = "arm64" ]; then
+		cp /usr/bin/qemu-aarch64-static "$DEST/usr/bin"
+	elif [ $ARCH = "arm" ]; then
+		cp /usr/bin/qemu-arm-static "$DEST/usr/bin"
+	fi
 
 	cmd="$@"
 	chroot "$DEST" mount -t proc proc /proc || true
@@ -188,16 +186,16 @@ do_chroot() {
 }
 
 do_conffile() {
-        mkdir -p $DEST/opt/boot
+	mkdir -p $DEST/opt/boot
 	if [ "${PLATFORM}" = "OrangePiH3" ]; then
-        	cp $EXTER/install_to_emmc_$OS $DEST/usr/local/sbin/install_to_emmc -f
-        	cp $EXTER/uboot/*.bin $DEST/opt/boot/ -f
-        	cp $EXTER/resize_rootfs.sh $DEST/usr/local/sbin/ -f
+		cp $EXTER/install_to_emmc_$OS $DEST/usr/local/sbin/install_to_emmc -f
+		cp $EXTER/uboot/*.bin $DEST/opt/boot/ -f
+		cp $EXTER/resize_rootfs.sh $DEST/usr/local/sbin/ -f
 	elif [ "${PLATFORM}" = "OrangePiH3_mainline" ]; then
 		cp $BUILD/uboot/u-boot-sunxi-with-spl.bin-${BOARD} $DEST/opt/boot/u-boot-sunxi-with-spl.bin -f
-        	cp $EXTER/mainline/install_to_emmc_$OS $DEST/usr/local/sbin/install_to_emmc -f
-        	cp $EXTER/mainline/resize_rootfs.sh $DEST/usr/local/sbin/ -f
-        	cp $EXTER/mainline/boot_emmc/* $DEST/opt/boot/ -f
+		cp $EXTER/mainline/install_to_emmc_$OS $DEST/usr/local/sbin/install_to_emmc -f
+		cp $EXTER/mainline/resize_rootfs.sh $DEST/usr/local/sbin/ -f
+		cp $EXTER/mainline/boot_emmc/* $DEST/opt/boot/ -f
 	elif [ "${PLATFORM}" = "OrangePiRK3399" ]; then
 		cp $EXTER/install_to_emmc_$OS $DEST/usr/local/sbin/install_to_emmc -f
 		mkdir -p $DEST/usr/local/lib/install_to_emmc
@@ -206,7 +204,7 @@ do_conffile() {
 		[ -d $DEST/system/etc/firmware ] || mkdir -p $DEST/system/etc/firmware
 		cp -rf $EXTER/firmware/* $DEST/system/etc/firmware
 		cp -rf $EXTER/asound.state $DEST/var/lib/alsa/
-		echo "" > $DEST/etc/fstab
+		echo "" >$DEST/etc/fstab
 	elif [ "${PLATFORM}" = "OrangePiRDA" ]; then
 		cp -rf ${EXTER}/chips/RDA/sbin/* ${DEST}/usr/local/sbin
 		cp -rf ${EXTER}/common/rootfs/100-fs-warning ${DEST}/etc/update-motd.d/
@@ -217,20 +215,20 @@ do_conffile() {
 		cp -rf ${EXTER}/chips/RDA/2G ${DEST}/root
 		cp -rf ${EXTER}/chips/RDA/sbin/test_playback.sh ${DEST}/root
 	else
-	        echo -e "\e[1;31m Pls select correct platform \e[0m"
-	        exit 0
+		echo -e "\e[1;31m Pls select correct platform \e[0m"
+		exit 0
 	fi
 
-        mkdir -p "$DEST/etc/ssh"
-        cp $EXTER/common/rootfs/sshd_config $DEST/etc/ssh/ -f
-        cp $EXTER/common/rootfs/profile_for_root $DEST/root/.profile -f
-#	cp $EXTER/bluetooth/bt.sh $DEST/usr/local/sbin/ -f
-#	cp $EXTER/bluetooth/brcm_patchram_plus/brcm_patchram_plus $DEST/usr/local/sbin/ -f
+	mkdir -p "$DEST/etc/ssh"
+	cp $EXTER/common/rootfs/sshd_config $DEST/etc/ssh/ -f
+	cp $EXTER/common/rootfs/profile_for_root $DEST/root/.profile -f
+	#	cp $EXTER/bluetooth/bt.sh $DEST/usr/local/sbin/ -f
+	#	cp $EXTER/bluetooth/brcm_patchram_plus/brcm_patchram_plus $DEST/usr/local/sbin/ -f
 	chmod +x $DEST/usr/local/sbin/*
 }
 
 add_ssh_keygen_service() {
-	cat > "$DEST/etc/systemd/system/ssh-keygen.service" <<EOF
+	cat >"$DEST/etc/systemd/system/ssh-keygen.service" <<EOF
 [Unit]
 Description=Generate SSH keys if not there
 Before=ssh.service
@@ -257,23 +255,23 @@ EOF
 }
 
 add_opi_python_gpio_libs() {
-        cp $EXTER/packages/OPi.GPIO $DEST/usr/local/sbin/ -rfa
-        cp $EXTER/packages/OPi.GPIO/test_gpio.py $DEST/usr/local/sbin/ -f
+	cp $EXTER/packages/OPi.GPIO $DEST/usr/local/sbin/ -rfa
+	cp $EXTER/packages/OPi.GPIO/test_gpio.py $DEST/usr/local/sbin/ -f
 
-        cat > "$DEST/install_opi_gpio" <<EOF
+	cat >"$DEST/install_opi_gpio" <<EOF
 #!/bin/bash
 apt update
 apt-get install -y python3-pip python3-setuptools
 cd /usr/local/sbin/OPi.GPIO
 python3 setup.py install
 EOF
-        chmod +x "$DEST/install_opi_gpio"
-        do_chroot /install_opi_gpio
+	chmod +x "$DEST/install_opi_gpio"
+	do_chroot /install_opi_gpio
 	rm $DEST/install_opi_gpio
 }
 
 add_bt_service() {
-        cat > "$DEST/lib/systemd/system/bt.service" <<EOF
+	cat >"$DEST/lib/systemd/system/bt.service" <<EOF
 [Unit]
 Description=OrangePi BT Service
 
@@ -284,21 +282,20 @@ RemainAfterExit=yes
 [Install]
 WantedBy=multi-user.target
 EOF
-        do_chroot systemctl enable bt.service
+	do_chroot systemctl enable bt.service
 }
-
 
 add_opi_config_libs() {
 	do_chroot apt-get install -y dialog expect bc cpufrequtils figlet toilet lsb-release
-        cp $EXTER/packages/opi_config_libs $DEST/usr/local/sbin/ -rfa
-        cp $EXTER/packages/opi_config_libs/opi-config $DEST/usr/local/sbin/ -rfa
+	cp $EXTER/packages/opi_config_libs $DEST/usr/local/sbin/ -rfa
+	cp $EXTER/packages/opi_config_libs/opi-config $DEST/usr/local/sbin/ -rfa
 
-	rm -rf $DEST/etc/update-motd.d/* 
-        cp $EXTER/packages/opi_config_libs/overlay/* $DEST/ -rf
+	rm -rf $DEST/etc/update-motd.d/*
+	cp $EXTER/packages/opi_config_libs/overlay/* $DEST/ -rf
 }
 
-add_resize_rootfs_service(){
-	cat > "$DEST/lib/systemd/system/resize-rootfs.service" <<EOF
+add_resize_rootfs_service() {
+	cat >"$DEST/lib/systemd/system/resize-rootfs.service" <<EOF
 [Unit]
 Description=Resize root filesystem to fit available disk space
 After=systemd-remount-fs.service
@@ -311,12 +308,12 @@ ExecStartPost=/bin/systemctl disable resize-rootfs.service
 [Install]
 WantedBy=basic.target
 EOF
-        cat > "$DEST/type-phase" <<EOF
+	cat >"$DEST/type-phase" <<EOF
 #!/bin/bash
 
 /bin/systemctl enable resize-rootfs.service
 EOF
-        chmod +x "$DEST/type-phase"
+	chmod +x "$DEST/type-phase"
 	do_chroot /type-phase
 	sync
 	rm -f "$DEST/type-phase"
@@ -326,12 +323,12 @@ EOF
 add_debian_apt_sources() {
 	local release="$1"
 	local aptsrcfile="$DEST/etc/apt/sources.list"
-	cat > "$aptsrcfile" <<EOF
+	cat >"$aptsrcfile" <<EOF
 deb ${SOURCES} ${release} main contrib non-free
 #deb-src ${SOURCES} ${release} main contrib non-free
 EOF
 	# No separate security or updates repo for unstable/sid
-	[ "$release" = "sid" ] || cat >> "$aptsrcfile" <<EOF
+	[ "$release" = "sid" ] || cat >>"$aptsrcfile" <<EOF
 deb ${SOURCES} ${release}-updates main contrib non-free
 #deb-src ${SOURCES} ${release}-updates main contrib non-free
 
@@ -342,7 +339,7 @@ EOF
 
 add_ubuntu_apt_sources() {
 	local release="$1"
-	cat > "$DEST/etc/apt/sources.list" <<EOF
+	cat >"$DEST/etc/apt/sources.list" <<EOF
 deb ${SOURCES} ${release} main restricted universe multiverse
 deb-src ${SOURCES} ${release} main restricted universe multiverse
 
@@ -357,12 +354,11 @@ deb-src ${SOURCES} ${release}-backports main restricted universe multiverse
 EOF
 }
 
-prepare_env()
-{
-	if [ ${ARCH} = "arm" ];then
+prepare_env() {
+	if [ ${ARCH} = "arm" ]; then
 		QEMU="/usr/bin/qemu-arm-static"
 		ROOTFS_ARCH="armhf"
-	elif [ ${ARCH} = "arm64" ];then
+	elif [ ${ARCH} = "arm64" ]; then
 		QEMU="/usr/bin/qemu-aarch64-static"
 		ROOTFS_ARCH="arm64"
 	fi
@@ -393,46 +389,46 @@ prepare_env()
 	trap cleanup EXIT
 
 	case $DISTRO in
-		xenial | bionic | focal | jammy)
-			case $SOURCES in
-				"CDN"|"OFCL")
-			       	        SOURCES="http://ports.ubuntu.com"
-					ROOTFS="http://cdimage.ubuntu.com/ubuntu-base/releases/${DISTRO}/release/ubuntu-base-${DISTRO_NUM}-base-${ROOTFS_ARCH}.tar.gz"
-				        ;;
-				"CN")
-				        #SOURCES="http://mirrors.aliyun.com/ubuntu-ports"
-		                        #SOURCES="http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports"
-				        SOURCES="http://mirrors.ustc.edu.cn/ubuntu-ports"
-					ROOTFS="https://mirrors.tuna.tsinghua.edu.cn/ubuntu-cdimage/ubuntu-base/releases/${DISTRO}/release/ubuntu-base-${DISTRO_NUM}-base-${ROOTFS_ARCH}.tar.gz"
-				        ;;
-				*)
-					SOURCES="http://ports.ubuntu.com"
-					ROOTFS="http://cdimage.ubuntu.com/ubuntu-base/releases/${DISTRO}/release/ubuntu-base-${DISTRO_NUM}-base-${ROOTFS_ARCH}.tar.gz"
-					;;
-			esac
+	xenial | bionic | focal | jammy)
+		case $SOURCES in
+		"CDN" | "OFCL")
+			SOURCES="http://ports.ubuntu.com"
+			ROOTFS="http://cdimage.ubuntu.com/ubuntu-base/releases/${DISTRO}/release/ubuntu-base-${DISTRO_NUM}-base-${ROOTFS_ARCH}.tar.gz"
 			;;
-		stretch | buster | bullseye)
-			ROOTFS="${DISTRO}-base-${ROOTFS_ARCH}.tar.gz"
-			METHOD="debootstrap"
-			case $SOURCES in
-		                "CDN")
-		                        SOURCES="http://httpredir.debian.org/debian"
-		                        ;;
-		                "OFCL")
-		                        SOURCES="http://ftp.debian.org/debian"
-		                        ;;
-		                "CN")
-		                        SOURCES="http://ftp2.cn.debian.org/debian"
-		                        ;;
-				*)
-					SOURCES="http://httpredir.debian.org/debian"
-		                        ;;
-		        esac
+		"CN")
+			#SOURCES="http://mirrors.aliyun.com/ubuntu-ports"
+			#SOURCES="http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports"
+			SOURCES="http://mirrors.ustc.edu.cn/ubuntu-ports"
+			ROOTFS="https://mirrors.tuna.tsinghua.edu.cn/ubuntu-cdimage/ubuntu-base/releases/${DISTRO}/release/ubuntu-base-${DISTRO_NUM}-base-${ROOTFS_ARCH}.tar.gz"
 			;;
 		*)
-			echo "Unknown distribution: $DISTRO"
-			exit 1
+			SOURCES="http://ports.ubuntu.com"
+			ROOTFS="http://cdimage.ubuntu.com/ubuntu-base/releases/${DISTRO}/release/ubuntu-base-${DISTRO_NUM}-base-${ROOTFS_ARCH}.tar.gz"
 			;;
+		esac
+		;;
+	stretch | buster | bullseye)
+		ROOTFS="${DISTRO}-base-${ROOTFS_ARCH}.tar.gz"
+		METHOD="debootstrap"
+		case $SOURCES in
+		"CDN")
+			SOURCES="http://httpredir.debian.org/debian"
+			;;
+		"OFCL")
+			SOURCES="http://ftp.debian.org/debian"
+			;;
+		"CN")
+			SOURCES="http://ftp2.cn.debian.org/debian"
+			;;
+		*)
+			SOURCES="http://httpredir.debian.org/debian"
+			;;
+		esac
+		;;
+	*)
+		echo "Unknown distribution: $DISTRO"
+		exit 1
+		;;
 	esac
 
 	TARBALL="$EXTER/$(basename $ROOTFS)"
@@ -455,8 +451,7 @@ prepare_env()
 	echo "OK"
 }
 
-prepare_rootfs_server()
-{
+prepare_rootfs_server() {
 
 	rm "$DEST/etc/resolv.conf"
 	cp /etc/resolv.conf "$DEST/etc/resolv.conf"
@@ -478,7 +473,7 @@ prepare_rootfs_server()
 	fi
 	add_${DEB}_apt_sources $DISTRO
 	rm -rf "$DEST/etc/apt/sources.list.d/proposed.list"
-	cat > "$DEST/second-phase" <<EOF
+	cat >"$DEST/second-phase" <<EOF
 #!/bin/bash
 export DEBIAN_FRONTEND=noninteractive
 
@@ -516,37 +511,35 @@ EOF
 	chmod +x "$DEST/second-phase"
 	do_chroot /second-phase
 	rm -f "$DEST/second-phase"
-        rm -f "$DEST/etc/resolv.conf"
+	rm -f "$DEST/etc/resolv.conf"
 
 	cd $BUILD
 	tar czf ${DISTRO}_server_rootfs.tar.gz rootfs
 	cd -
 }
 
-prepare_rootfs_desktop()
-{
+prepare_rootfs_desktop() {
 	install_lxde_desktop
 	cd $BUILD
 	tar czf ${DISTRO}_desktop_rootfs.tar.gz rootfs
 	cd -
-				
+
 }
 
-server_setup()
-{
-	if [ $BOARD = "zero_plus2_h3" ];then
+server_setup() {
+	if [ $BOARD = "zero_plus2_h3" ]; then
 		:
 	else
-	mkdir -p "$DEST/etc/network/interfaces.d"
-	cat > "$DEST/etc/network/interfaces.d/eth0" <<EOF
+		mkdir -p "$DEST/etc/network/interfaces.d"
+		cat >"$DEST/etc/network/interfaces.d/eth0" <<EOF
 auto eth0
 iface eth0 inet dhcp
 EOF
 	fi
-	cat > "$DEST/etc/hostname" <<EOF
+	cat >"$DEST/etc/hostname" <<EOF
 orangepi${BOARD}
 EOF
-	cat > "$DEST/etc/hosts" <<EOF
+	cat >"$DEST/etc/hosts" <<EOF
 127.0.0.1 localhost
 127.0.1.1 orangepi${BOARD}
 
@@ -557,15 +550,15 @@ ff00::0 ip6-mcastprefix
 ff02::1 ip6-allnodes
 ff02::2 ip6-allrouters
 EOF
-	cat > "$DEST/etc/resolv.conf" <<EOF
+	cat >"$DEST/etc/resolv.conf" <<EOF
 nameserver 8.8.8.8
 EOF
 
 	do_conffile
 	add_ssh_keygen_service
-#	add_opi_python_gpio_libs
-#	add_opi_config_libs
-#	add_bt_service
+	#	add_opi_python_gpio_libs
+	#	add_opi_config_libs
+	#	add_bt_service
 	sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
 	rm -f "$DEST"/etc/ssh/ssh_host_*
 
@@ -574,7 +567,7 @@ EOF
 	mkdir -p "$DEST/usr"
 
 	# Create fstab
-	cat  > "$DEST/etc/fstab" <<EOF
+	cat >"$DEST/etc/fstab" <<EOF
 # <file system>	<dir>	<type>	<options>			<dump>	<pass>
 /dev/mmcblk0p1	/boot	vfat	defaults			0		2
 /dev/mmcblk0p2	/	ext4	defaults,noatime		0		1
@@ -587,21 +580,21 @@ EOF
 	fi
 
 	if [ $PLATFORM = "OrangePiRK3399" ]; then
-		echo "" > $DEST/etc/fstab
-		echo "ttyFIQ0" >> $DEST/etc/securetty
+		echo "" >$DEST/etc/fstab
+		echo "ttyFIQ0" >>$DEST/etc/securetty
 		sed -i '/^TimeoutStartSec=/s/5min/15sec/' $DEST/lib/systemd/system/networking.service
 		setup_resize-helper
 	elif [ $PLATFORM = "OrangePiRDA" ]; then
 		add_resize_rootfs_service
-		cat  > "$DEST/etc/fstab" <<EOF
+		cat >"$DEST/etc/fstab" <<EOF
 # OrangePI fstab
 /dev/mmcblk0p2  /  ext4  errors=remount-ro,noatime,nodiratime  0 1
 /dev/mmcblk0p1  /media/boot  ext2  defaults  0 0
 tmpfs /tmp  tmpfs nodev,nosuid,mode=1777  0 0
 EOF
-		echo "rdawfmac" >> ${DEST}/etc/modules-load.d/modules.conf
+		echo "rdawfmac" >>${DEST}/etc/modules-load.d/modules.conf
 		rm -rf $DEST/etc/network/interfaces.d/eth0
-		cat > "$DEST/lib/systemd/system/OrangePi_2G_IOT_GPIO.service" <<EOF
+		cat >"$DEST/lib/systemd/system/OrangePi_2G_IOT_GPIO.service" <<EOF
 [Unit]
 Description=OrangePi 2G-IOT GPIO Specify
 
@@ -612,15 +605,43 @@ RemainAfterExit=yes
 [Install]
 WantedBy=multi-user.target
 EOF
-        	cat > "$DEST/type-phase" <<EOF
+		cat >"$DEST/type-phase" <<EOF
 #!/bin/bash
 
 /bin/systemctl enable OrangePi_2G_IOT_GPIO.service
 EOF
-        	chmod +x "$DEST/type-phase"
-        	do_chroot /type-phase
-        	sync
-        	rm -f "$DEST/type-phase"
+		chmod +x "$DEST/type-phase"
+		do_chroot /type-phase
+		sync
+		rm -f "$DEST/type-phase"
+
+		# GPIO fixup
+		curl -k -L -o "$DEST/usr/local/sbin/gpio_fixup.sh" https://wiki.pbeirne.com/patb/i96/raw/master/gpio_fixup.sh
+		chmod +x "$DEST/usr/local/sbin/gpio_fixup.sh"
+		curl -k -L -o "$DEST/usr/local/bin/opio" https://wiki.pbeirne.com/patb/opio/raw/master/opio
+		chmod +x "$DEST/usr/local/bin/opio"
+		ln -s "$DEST/usr/local/bin/opio" "$DEST/usr/local/bin/gpio"
+		curl -k -L -o "$DEST/usr/local/bin/devmem2.py" https://wiki.pbeirne.com/patb/i96/src/master/devmem2.py
+		chmod +x "$DEST/usr/local/bin/devmem2.py"
+		cat >"$DEST/lib/systemd/system/gpio_fixup.service" <<EOF
+[Unit]
+Description=OrangePi GPIO Fixup
+
+[Service]
+ExecStart=/usr/local/sbin/gpio_fixup.sh
+
+[Install]
+WantedBy=multi-user.target
+EOF
+		cat >"$DEST/type-phase" <<EOF
+#!/bin/bash
+
+/bin/systemctl enable gpio_fixup.service
+EOF
+		chmod +x "$DEST/type-phase"
+		do_chroot /type-phase
+		sync
+		rm -f "$DEST/type-phase"
 
 	fi
 	# Install Kernel modules
@@ -634,15 +655,14 @@ EOF
 	#cp -rfa $DEST $BUILD/${DISTRO}_${IMAGETYPE}_rootfs
 }
 
-desktop_setup()
-{
+desktop_setup() {
 	if [ "$PLATFORM" = "OrangePiRK3399" ]; then
 		sed -i '/^wallpaper=/s/\/etc\/alternatives\/desktop-background/\/usr\/share\/lxde\/wallpapers\/newxitong_17.jpg/' $DEST/etc/xdg/pcmanfm/LXDE/pcmanfm.conf
 		sed -i '/^[ ]*transparent=/s/0/1/' $DEST/etc/xdg/lxpanel/LXDE/panels/panel
 		sed -i '/^[ ]*background=/s/1/0/' $DEST/etc/xdg/lxpanel/LXDE/panels/panel
 
-		echo -e "\n[keyfile]\nunmanaged-devices=*,except:type:ethernet,except:type:wifi,except:type:wwan" >> ${DEST}/etc/NetworkManager/NetworkManager.conf
-		[ "$DISTRO" = "bullseye" ] && echo -e "\n[device]\nwifi.scan-rand-mac-address=no" >> $DEST/etc/NetworkManager/NetworkManager.conf
+		echo -e "\n[keyfile]\nunmanaged-devices=*,except:type:ethernet,except:type:wifi,except:type:wwan" >>${DEST}/etc/NetworkManager/NetworkManager.conf
+		[ "$DISTRO" = "bullseye" ] && echo -e "\n[device]\nwifi.scan-rand-mac-address=no" >>$DEST/etc/NetworkManager/NetworkManager.conf
 		[ "$DISTRO" = "bullseye" ] && cp -rfa $EXTER/packages/others/glmark2/* "$DEST"
 		[ "$DISTRO" = "jammy" -o "$DISTRO" = "focal" ] && setup_front
 		cp -rfa "$EXTER/packages" "$DEST"
@@ -654,8 +674,7 @@ desktop_setup()
 
 }
 
-build_rootfs()
-{
+build_rootfs() {
 	prepare_env
 
 	if [ $TYPE = "1" ]; then
@@ -685,4 +704,3 @@ build_rootfs()
 		server_setup
 	fi
 }
-
