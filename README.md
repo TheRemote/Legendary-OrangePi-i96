@@ -16,6 +16,15 @@ My blog post that birthed this image is located <a href="https://jamesachambers.
   <li>Fixed buggy UART not resetting properly which often breaks copying/pasting through a serial terminal</li>
   <li>Fixed sound issues that would prevent rebooting the system successfully after first startup</li>
 </ol>
+
+<h2>First Startup Instructions</h2>
+Set correct locale:
+<pre>sudo dpkg-reconfigure locales</pre>
+Set correct timezone:
+<pre>sudo dpkg-reconfigure tzdata</pre>
+Sync time:
+<pre>sudo ntpd -gq</pre>
+
 <h2>Build Instructions</h2>
 You should first clone the OrangePi_Build repository:<br>
 <pre>git clone https://github.com/orangepi-xunlong/OrangePi_Build.git
