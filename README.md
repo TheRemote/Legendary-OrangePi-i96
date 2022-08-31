@@ -9,6 +9,7 @@ My blog post that birthed this image is located <a href="https://jamesachambers.
 <ol>
   <li>Adds replacement for WiringPi GPIO tool by patb and fixes GPIO pin assignments</li>
   <li>Adds missing default locales that would cause Perl to throw lots of warnings every time a package was configured</li>
+  <li>Adds spidev kernel module</li>
   <li>Adds ntp to assist with fixing time on first startup -- use "sudo ntpd -gq" to force a time sync once you've set your correct timezone (sudo dpkg-reconfigure tzdata)</li>
   <li>Fixed wireless MAC address changing each startup</li>
   <li>Fixed USB port to allow "High Speed" USB devices instead of locking them to "Full Speed"</li>
@@ -31,6 +32,7 @@ Ubuntu is not building correctly yet.<br>
 <br>
 <h2>Version History</h2>
 <ol>
+  <li>August 31th 2022 - V1.4 - Add spidev kernel module, remove applying default locale due to breaking serial console on some systems</li>
   <li>August 30th 2022 - V1.3 - Add patb's gpio_fixup.sh script to fix GPIO pins on startup / gpio tool replacement / wireless LAN MAC address fix</li>
   <li>August 26th 2022 - V1.2 - Added ntp package to help with time issues (use "sudo ntpd -gq" on first startup), fixed locales issue</li>
   <li>August 24th 2022 - V1.1 - Added sound fix and UART fix from official OrangePi repository pull requests</li>

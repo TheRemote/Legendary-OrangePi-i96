@@ -478,11 +478,12 @@ prepare_rootfs_server() {
 export DEBIAN_FRONTEND=noninteractive
 
 apt-get -y update
-apt-get -y install locales
-echo "locales locales/default_environment_locale select en_US.UTF-8" | debconf-set-selections
-echo "locales locales/locales_to_be_generated multiselect en_US.UTF-8 UTF-8" | debconf-set-selections
-rm -f "/etc/locale.gen"
-dpkg-reconfigure --frontend noninteractive locales
+# Disabling locales change due to breaking serial terminals on some systems
+#apt-get -y install locales
+#echo "locales locales/default_environment_locale select en_US.UTF-8" | debconf-set-selections
+#echo "locales locales/locales_to_be_generated multiselect en_US.UTF-8 UTF-8" | debconf-set-selections
+#rm -f "/etc/locale.gen"
+#dpkg-reconfigure --frontend noninteractive locales
 
 apt-get -y install sudo imagemagick libv4l-dev cmake bluez dnsmasq apt-transport-https man subversion python3-pip python3-setuptools gpg net-tools g++ libjpeg-dev usbutils curl dosfstools curl xz-utils iw rfkill ifupdown wpasupplicant openssh-server rsync u-boot-tools vim parted network-manager git autoconf gcc libtool ntp libsysfs-dev pkg-config libdrm-dev xutils-dev hostapd alsa-utils
 apt-get -y install $EXTRADEBS
