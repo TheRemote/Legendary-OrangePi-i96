@@ -18,12 +18,12 @@ My blog post that birthed this image is located <a href="https://jamesachambers.
 </ol>
 
 <h2>First Startup Instructions</h2>
-Set correct locale:
-<pre>sudo dpkg-reconfigure locales</pre>
 Set correct timezone:
 <pre>sudo dpkg-reconfigure tzdata</pre>
 Sync time:
 <pre>sudo ntpd -gq</pre>
+Set correct locale:
+<pre>sudo apt install locales -y && sudo dpkg-reconfigure locales</pre>
 
 <h2>Build Instructions</h2>
 You should first clone the OrangePi_Build repository:<br>
