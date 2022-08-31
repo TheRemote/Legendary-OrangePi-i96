@@ -1,5 +1,5 @@
 # Legendary-OrangePi-i96
-An image and set of build system modifications (to the official OrangePi_Build tool) for the Orange Pi i96.  Debian Bullseye (11) is available.<br>
+An image for the Orange Pi i96 made from fixes around the internet as well as a set of build system modifications (to the official OrangePi_Build tool) to be able to build it yourself if desired.  Debian Bullseye (11) is available.<br>
 <br>
 <strong>You do not have to build this yourself.</strong>  Images are available <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/releases">here in the releases section</a>.<br>
 My blog post that birthed this image is located <a href="https://jamesachambers.com/orange-pi-i96-getting-started-guide/">here on jamesachambers.com</a>.<br>
