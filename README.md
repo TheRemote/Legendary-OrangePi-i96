@@ -9,12 +9,12 @@ My blog post that birthed this image is located <a href="https://jamesachambers.
 <ol>
   <li>Adds replacement for WiringPi GPIO tool by patb and fixes GPIO pin assignments</li>
   <li>Adds missing default locales that would cause Perl to throw lots of warnings every time a package was configured</li>
-  <li>Adds spidev kernel module</li>
   <li>Adds ntp to assist with fixing time on first startup -- use "sudo ntpd -gq" to force a time sync once you've set your correct timezone (sudo dpkg-reconfigure tzdata)</li>
   <li>Fixed wireless MAC address changing each startup</li>
   <li>Fixed USB port to allow "High Speed" USB devices instead of locking them to "Full Speed"</li>
   <li>Fixed buggy UART not resetting properly which often breaks copying/pasting through a serial terminal</li>
   <li>Fixed sound issues that would prevent rebooting the system successfully after first startup</li>
+  <li>Fixed GPIO permissions errors on startup</li>
 </ol>
 
 <h2>First Startup Instructions</h2>
@@ -41,7 +41,7 @@ Ubuntu is not building correctly yet.<br>
 <br>
 <h2>Version History</h2>
 <ol>
-  <li>August 31th 2022 - V1.4 - Add spidev kernel module, remove applying default locale due to breaking serial console on some systems</li>
+  <li>August 31th 2022 - V1.4 - remove applying default locale due to breaking serial console on some systems (see first startup instructions to apply your correct locale instead of me applying mine which was causing problems), fix startup permissions errors related to GPIO</li>
   <li>August 30th 2022 - V1.3 - Add patb's gpio_fixup.sh script to fix GPIO pins on startup / gpio tool replacement / wireless LAN MAC address fix</li>
   <li>August 26th 2022 - V1.2 - Added ntp package to help with time issues (use "sudo ntpd -gq" on first startup), fixed locales issue</li>
   <li>August 24th 2022 - V1.1 - Added sound fix and UART fix from official OrangePi repository pull requests</li>
@@ -58,3 +58,4 @@ Is it enough?  You'll have to judge for yourself if it's enough but it is enough
 <a href="https://github.com/orangepi-xunlong/OrangePiRDA_kernel/pull/2">Credit to GMMan</a> for the pull request on the official repository to fix sound playback kernel parameter issues<br>
 <a href="https://github.com/orangepi-xunlong/OrangePiRDA_kernel/pull/3">Credit to GMMan again</a> for the pull request on the official repository to fix UART serial issues fixing copy/pasting<br>
 <a href="https://wiki.pbeirne.com/patb/i96/src/master/gpio_fixup.sh">Credit to patb</a> for gpio_fixup.sh / devmem2.py which fixes the GPIO pins and the <a href="https://wiki.pbeirne.com/patb/opio">gpio tool replacement for WiringPi</a> as well as a <a href="https://wiki.pbeirne.com/patb/i96/">wireless driver which prevents the MAC address from changing each boot</a><br>
+<a href="https://github.com/MesihK/linux-RDA8810/commit/d7089f4c43bd76082459e6995652b578ce2d10f4?diff=unified">Credit to MesihK</a> for the gpio files permissions fix<br>
