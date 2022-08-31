@@ -8,7 +8,7 @@ My blog post that birthed this image is located <a href="https://jamesachambers.
 <br>
 <h2>Fixes</h2>
 <ol>
-  <li>Adds replacement for WiringPi GPIO tool by patb called opio and fixes GPIO pin assignments</li>
+  <li>Adds replacement for WiringPi GPIO tool by patb and fixes GPIO pin assignments</li>
   <li>Adds missing default locales that would cause Perl to throw lots of warnings every time a package was configured</li>
   <li>Adds ntp to assist with fixing time on first startup -- use "sudo ntpd -gq" to force a time sync once you've set your correct timezone (sudo dpkg-reconfigure tzdata)</li>
   <li>Fixed wireless MAC address changing each startup</li>
@@ -47,4 +47,4 @@ Is it enough?  You'll have to judge for yourself if it's enough but it is enough
 <a href="https://forum.armbian.com/topic/3232-orange-pi-2g-iot/page/6/">Credit to Gabor Hidvegi for the patch itself</a> as I found his patch (which wasn't as effective for the 2G version as he would have liked due to the modem initialization dropping the speed) but for the regular i96 this patch is working as-is.<br>
 <a href="https://github.com/orangepi-xunlong/OrangePiRDA_kernel/pull/2">Credit to GMMan</a> for the pull request on the official repository to fix sound playback kernel parameter issues<br>
 <a href="https://github.com/orangepi-xunlong/OrangePiRDA_kernel/pull/3">Credit to GMMan again</a> for the pull request on the official repository to fix UART serial issues fixing copy/pasting<br>
-<a href="https://wiki.pbeirne.com/patb/i96/src/master/gpio_fixup.sh">Credit to patb</a> for gpio_fixup.sh / devmem2.py which fixes the GPIO pins and the <a href="https://wiki.pbeirne.com/patb/opio">opio gpio tool replacement for WiringPi</a> as well as a <a href="https://wiki.pbeirne.com/patb/i96/">wireless driver which prevents the MAC address from changing each boot</a><br>
+<a href="https://wiki.pbeirne.com/patb/i96/src/master/gpio_fixup.sh">Credit to patb</a> for gpio_fixup.sh / devmem2.py which fixes the GPIO pins and the <a href="https://wiki.pbeirne.com/patb/opio">gpio tool replacement for WiringPi</a> as well as a <a href="https://wiki.pbeirne.com/patb/i96/">wireless driver which prevents the MAC address from changing each boot</a><br>
