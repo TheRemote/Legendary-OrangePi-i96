@@ -1585,8 +1585,9 @@ static struct spi_board_info rda_spi_board_info[] = {
 		.modalias = "spidev", // driver name
 		.max_speed_hz = 32000000,
 		.mode = SPI_MODE_0,
-		.bus_num = 1, // our spi number is 1
+		.bus_num = 3, // our spi number is 3
 		.chip_select = 0,
+		.controller_data = (void *) 5, // CS pin 
 	},
 };
 
