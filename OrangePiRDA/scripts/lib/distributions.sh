@@ -614,6 +614,7 @@ EOF
 
 exit 0
 EOF
+chmod +x "$DEST/etc/rc.local"
 
 		cat >"$DEST/type-phase" <<EOF
 #!/bin/bash
