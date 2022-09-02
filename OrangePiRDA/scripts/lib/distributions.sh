@@ -485,14 +485,14 @@ apt-get -y update
 #rm -f "/etc/locale.gen"
 #dpkg-reconfigure --frontend noninteractive locales
 
-apt-get -y install sudo imagemagick libv4l-dev cmake bluez dnsmasq apt-transport-https man subversion python3-pip python3-setuptools gpg net-tools g++ libjpeg-dev usbutils curl dosfstools curl xz-utils iw rfkill ifupdown wpasupplicant openssh-server rsync u-boot-tools vim parted network-manager git autoconf gcc libtool ntp libsysfs-dev pkg-config libdrm-dev xutils-dev alsa-utils acl
+apt-get -y install sudo imagemagick libv4l-dev cmake bluez apt-transport-https man subversion python3-pip python3-setuptools gpg net-tools g++ libjpeg-dev usbutils curl dosfstools curl xz-utils iw rfkill ifupdown wpasupplicant openssh-server rsync u-boot-tools vim parted network-manager git autoconf gcc libtool ntp libsysfs-dev pkg-config libdrm-dev xutils-dev alsa-utils acl
 apt-get -y install $EXTRADEBS
 
 pip3 install spidev
 
 apt-get install -f
 
-apt-get -y remove --purge ureadahead modemmanager
+apt-get -y remove --purge modemmanager
 $ADDPPACMD
 apt-get -y update && apt-get -y dist-upgrade
 $DISPTOOLCMD
@@ -609,6 +609,12 @@ RemainAfterExit=yes
 [Install]
 WantedBy=multi-user.target
 EOF
+		cat >"$DEST/etc/rc.local" <<EOF
+#!/bin/sh
+
+exit 0
+EOF
+
 		cat >"$DEST/type-phase" <<EOF
 #!/bin/bash
 
