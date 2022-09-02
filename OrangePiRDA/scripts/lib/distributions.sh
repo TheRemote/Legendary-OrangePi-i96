@@ -485,14 +485,14 @@ apt-get -y update
 #rm -f "/etc/locale.gen"
 #dpkg-reconfigure --frontend noninteractive locales
 
-apt-get -y install sudo imagemagick libv4l-dev cmake bluez dnsmasq apt-transport-https man subversion python3-pip python3-setuptools gpg net-tools g++ libjpeg-dev usbutils curl dosfstools curl xz-utils iw rfkill ifupdown wpasupplicant openssh-server rsync u-boot-tools vim parted network-manager git autoconf gcc libtool ntp libsysfs-dev pkg-config libdrm-dev xutils-dev hostapd alsa-utils
+apt-get -y install sudo imagemagick libv4l-dev cmake bluez dnsmasq apt-transport-https man subversion python3-pip python3-setuptools gpg net-tools g++ libjpeg-dev usbutils curl dosfstools curl xz-utils iw rfkill ifupdown wpasupplicant openssh-server rsync u-boot-tools vim parted network-manager git autoconf gcc libtool ntp libsysfs-dev pkg-config libdrm-dev xutils-dev alsa-utils acl
 apt-get -y install $EXTRADEBS
 
 pip3 install spidev
 
 apt-get install -f
 
-apt-get -y remove --purge ureadahead
+apt-get -y remove --purge ureadahead modemmanager
 $ADDPPACMD
 apt-get -y update && apt-get -y dist-upgrade
 $DISPTOOLCMD
@@ -505,6 +505,9 @@ usermod -a -G sudo $DEBUSER
 usermod -a -G adm $DEBUSER
 usermod -a -G video $DEBUSER
 usermod -a -G plugdev $DEBUSER
+usermod -a -G audio $DEBUSER
+usermod -a -G bluetooth $DEBUSER
+usermod -a -G netdev $DEBUSER
 apt-get -y autoremove
 apt-get clean
 ntpd -gq
@@ -595,12 +598,12 @@ tmpfs /tmp  tmpfs nodev,nosuid,mode=1777  0 0
 EOF
 		echo "rdawfmac" >>${DEST}/etc/modules-load.d/modules.conf
 		rm -rf $DEST/etc/network/interfaces.d/eth0
-		cat >"$DEST/lib/systemd/system/OrangePi_2G_IOT_GPIO.service" <<EOF
+		cat >"$DEST/lib/systemd/system/rc-local.service" <<EOF
 [Unit]
-Description=OrangePi 2G-IOT GPIO Specify
+Description=rc.local service
 
 [Service]
-ExecStart=/usr/local/sbin/OrangePi_2G_IOT_GPIO.sh
+ExecStart=/etc/rc.local
 RemainAfterExit=yes
 
 [Install]
@@ -609,7 +612,7 @@ EOF
 		cat >"$DEST/type-phase" <<EOF
 #!/bin/bash
 
-/bin/systemctl enable OrangePi_2G_IOT_GPIO.service
+/bin/systemctl enable rc-local.service
 EOF
 		chmod +x "$DEST/type-phase"
 		do_chroot /type-phase
@@ -638,6 +641,13 @@ EOF
 #!/bin/bash
 
 /bin/systemctl enable gpio_fixup.service
+
+# Enable resolved
+/bin/systemctl enable systemd-resolved.service
+
+# Fix AmbientCapabilities of e2scrub_reap.service
+sed -i 's/AmbientCapabilities=.*/AmbientCapabilites=/g' /usr/lib/systemd/system/e2scrub_reap.service
+/bin/systemctl daemon-reload
 EOF
 		chmod +x "$DEST/type-phase"
 		do_chroot /type-phase
@@ -645,6 +655,7 @@ EOF
 		rm -f "$DEST/type-phase"
 
 	fi
+	
 	# Install Kernel modules
 	make -C $LINUX ARCH=${ARCH} CROSS_COMPILE=$TOOLS modules_install INSTALL_MOD_PATH="$DEST"
 
