@@ -1,7 +1,7 @@
 #!/bin/bash
 
 build_rk_image() {
-	VER="v1.5"
+	VER="v1.6"
 	IMAGENAME="Legendary_OrangePi_${BOARD}_${OS}_${DISTRO}_${IMAGETYPE}_${VER}"
 	IMAGE="$BUILD/images/$IMAGENAME.img"
 
@@ -76,7 +76,7 @@ EOF
 }
 
 build_rda_image() {
-	VER="v1.5"
+	VER="v1.6"
 	IMAGENAME="Legendary_OrangePi_${BOARD}_${OS}_${DISTRO}_${IMAGETYPE}_${VER}"
 	IMAGE="${BUILD}/images/$IMAGENAME.img"
 

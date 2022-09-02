@@ -41,6 +41,7 @@ Ubuntu is not building correctly yet.<br>
 <br>
 <h2>Version History</h2>
 <ol>
+  <li>September 2nd 2022 - V1.6 - Fix spidev</li>
   <li>September 1st 2022 - V1.5 - Adds spidev interface to access SPI over the GPIO pins</li>
   <li>August 31th 2022 - V1.4 - remove applying default locale due to breaking serial console on some systems (see first startup instructions to apply your correct locale instead of me applying mine which was causing problems), fix startup permissions errors related to GPIO</li>
   <li>August 30th 2022 - V1.3 - Add patb's gpio_fixup.sh script to fix GPIO pins on startup / gpio tool replacement / wireless LAN MAC address fix</li>
