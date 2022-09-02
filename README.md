@@ -9,6 +9,7 @@ My blog post that birthed this image is located <a href="https://jamesachambers.
 <ol>
   <li>Adds replacement for WiringPi GPIO tool by patb and fixes GPIO pin assignments</li>
   <li>Adds missing default locales that would cause Perl to throw lots of warnings every time a package was configured</li>
+  <li>Adds spidev interface to access SPI over the GPIO pins</li>
   <li>Adds ntp to assist with fixing time on first startup -- use "sudo ntpd -gq" to force a time sync once you've set your correct timezone (sudo dpkg-reconfigure tzdata)</li>
   <li>Fixed wireless MAC address changing each startup</li>
   <li>Fixed USB port to allow "High Speed" USB devices instead of locking them to "Full Speed"</li>
@@ -41,6 +42,7 @@ Ubuntu is not building correctly yet.<br>
 <br>
 <h2>Version History</h2>
 <ol>
+  <li>September 1st 2022 - V1.5 - Adds spidev interface to access SPI over the GPIO pins</li>
   <li>August 31th 2022 - V1.4 - remove applying default locale due to breaking serial console on some systems (see first startup instructions to apply your correct locale instead of me applying mine which was causing problems), fix startup permissions errors related to GPIO</li>
   <li>August 30th 2022 - V1.3 - Add patb's gpio_fixup.sh script to fix GPIO pins on startup / gpio tool replacement / wireless LAN MAC address fix</li>
   <li>August 26th 2022 - V1.2 - Added ntp package to help with time issues (use "sudo ntpd -gq" on first startup), fixed locales issue</li>
