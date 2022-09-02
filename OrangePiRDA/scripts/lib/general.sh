@@ -184,14 +184,16 @@ select_distro() {
 	MENUSTR="Distro Options"
 	OPTION=$(whiptail --title "OrangePi Build System" \
 		--menu "$MENUSTR" 20 60 10 --cancel-button Finish --ok-button Select \
-		"0" "[$SOURCES]Change repository server" \
+		"0" "Debian Bullseye" \
 		"1" "Ubuntu Focal" \
-		"2" "Debian Bullseye" \
+		"2" "[$SOURCES]Change repository server" \
+		"3" "Ubuntu Bionic" \
 		3>&1 1>&2 2>&3)
 
 	case "${OPTION}" in
 	"0")
-		select_sources
+		DISTRO="bullseye"
+		OS="debian"
 		;;
 	"1")
 		DISTRO="focal"
@@ -199,8 +201,7 @@ select_distro() {
 		OS="ubuntu"
 		;;
 	"2")
-		DISTRO="bullseye"
-		OS="debian"
+		select_sources
 		;;
 	"3")
 		DISTRO="bionic"
