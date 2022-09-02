@@ -8,7 +8,6 @@ My blog post that birthed this image is located <a href="https://jamesachambers.
 <h2>Fixes</h2>
 <ol>
   <li>Adds replacement for WiringPi GPIO tool by patb and fixes GPIO pin assignments</li>
-  <li>Adds missing default locales that would cause Perl to throw lots of warnings every time a package was configured</li>
   <li>Adds spidev interface to access SPI over the GPIO pins</li>
   <li>Adds ntp to assist with fixing time on first startup -- use "sudo ntpd -gq" to force a time sync once you've set your correct timezone (sudo dpkg-reconfigure tzdata)</li>
   <li>Fixed wireless MAC address changing each startup</li>
