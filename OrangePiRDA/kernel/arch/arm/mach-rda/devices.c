@@ -893,7 +893,7 @@ void __init nand_device_init(void)
 	}
 	else if (rda_sdcard)
 	{
-		/*platform_device_register(&rda_mmc0);*/
+		platform_device_register(&rda_mmc0);
 	}
 	else
 	{

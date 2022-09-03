@@ -26,7 +26,9 @@ Sync time:
 Set correct locale:
 <pre>sudo apt install locales -y && sudo dpkg-reconfigure locales</pre>
 Set wireless regulatory country:
-<pre>sudo iw reg set US</pre>
+<pre>sudo nano /etc/default/crda</pre>
+Add your two letter country code (mine is US) to the end of the bottom line (after the equals sign) that says REGDOMAIN=
+Press Ctrl+X then Y to save the file.
 
 <h2>Build Instructions</h2>
 You should first clone the OrangePi_Build repository:<br>
@@ -44,6 +46,7 @@ Ubuntu is not building correctly yet.<br>
 <br>
 <h2>Version History</h2>
 <ol>
+  <li>September 3rd 2022 - V1.8 - Add crda package and instructions to configure regulatory domain (REGDOMAIN)</li>
   <li>September 2nd 2022 - V1.7 - Enable systemd-resolved service to help with DNS over WiFi, remove crashing hostapd service, fix e2scrub_all service, add orangepi user to audio, bluetooth, netdev</li>
   <li>September 2nd 2022 - V1.6 - Fix spidev</li>
   <li>September 1st 2022 - V1.5 - Adds spidev interface to access SPI over the GPIO pins</li>
