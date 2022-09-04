@@ -10,7 +10,7 @@ My blog post that birthed this image is located <a href="https://jamesachambers.
   <li>Adds replacement for WiringPi GPIO tool by patb and fixes GPIO pin assignments</li>
   <li>Adds spidev interface to access SPI over the GPIO pins</li>
   <li>Adds ntp to assist with fixing time on first startup -- use "sudo ntpd -gq" to force a time sync once you've set your correct timezone (sudo dpkg-reconfigure tzdata)</li>
-  <li>Adds ability to use the i96 as a HID device (mouse/keyboard emulation).</li>
+  <li>Adds ability to use the i96 as a HID device (mouse/keyboard emulation)</li>
   <li>Fixed notorious WiFi issues caused by missing crda package and no regulatory domain set (see first startup instructions to set REGDOMAIN)</li>
   <li>Fixed wireless MAC address changing each startup</li>
   <li>Fixed USB port to allow "High Speed" USB devices instead of locking them to "Full Speed"</li>
@@ -29,7 +29,7 @@ Set correct locale:
 <pre>sudo apt install locales -y && sudo dpkg-reconfigure locales</pre>
 Set wireless regulatory country:
 <pre>sudo nano /etc/default/crda</pre>
-Add your two letter country code (mine is US) to the end of the bottom line (after the equals sign) that says REGDOMAIN=
+Add your two letter country code (mine is US) to the end of the bottom line (after the equals sign) that says REGDOMAIN=<br>
 Press Ctrl+X then Y to save the file.
 
 <h2>Build Instructions</h2>
