@@ -10,6 +10,8 @@ My blog post that birthed this image is located <a href="https://jamesachambers.
   <li>Adds replacement for WiringPi GPIO tool by patb and fixes GPIO pin assignments</li>
   <li>Adds spidev interface to access SPI over the GPIO pins</li>
   <li>Adds ntp to assist with fixing time on first startup -- use "sudo ntpd -gq" to force a time sync once you've set your correct timezone (sudo dpkg-reconfigure tzdata)</li>
+  <li>Adds ability to use the i96 as a HID device (mouse/keyboard emulation).</li>
+  <li>Fixed notorious WiFi issues caused by missing crda package and no regulatory domain set (see first startup instructions to set REGDOMAIN)</li>
   <li>Fixed wireless MAC address changing each startup</li>
   <li>Fixed USB port to allow "High Speed" USB devices instead of locking them to "Full Speed"</li>
   <li>Fixed buggy UART not resetting properly which often breaks copying/pasting through a serial terminal</li>
@@ -46,6 +48,7 @@ Ubuntu is not building correctly yet.<br>
 <br>
 <h2>Version History</h2>
 <ol>
+  <li>September 4th 2022 - V1.9 - Adds ability to use the i96 as a HID device (thanks jakeau, <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/pull/1">PR #1</a>)</li>
   <li>September 3rd 2022 - V1.8 - Add crda package and instructions to configure regulatory domain (REGDOMAIN)</li>
   <li>September 2nd 2022 - V1.7 - Enable systemd-resolved service to help with DNS over WiFi, remove crashing hostapd service, fix e2scrub_all service, add orangepi user to audio, bluetooth, netdev</li>
   <li>September 2nd 2022 - V1.6 - Fix spidev</li>
@@ -69,3 +72,4 @@ Is it enough?  You'll have to judge for yourself if it's enough but it is enough
 <a href="https://wiki.pbeirne.com/patb/i96/src/master/gpio_fixup.sh">Credit to patb</a> for gpio_fixup.sh / devmem2.py which fixes the GPIO pins and the <a href="https://wiki.pbeirne.com/patb/opio">gpio tool replacement for WiringPi</a> as well as a <a href="https://wiki.pbeirne.com/patb/i96/">wireless driver which prevents the MAC address from changing each boot</a><br>
 <a href="https://github.com/MesihK/linux-RDA8810/commit/d7089f4c43bd76082459e6995652b578ce2d10f4?diff=unified">Credit to MesihK</a> for the gpio files permissions fix<br>
 <a href="https://4pda.to/forum/index.php?showtopic=813602&st=280">Credit to Yoshie</a> for enough hints to enable the spidev interface<br>
+<a href="https://github.com/TheRemote/Legendary-OrangePi-i96/pull/1">Credit to jakeau</a> for adding the ability to use the i96 as a HID device (PR #1)<br>
