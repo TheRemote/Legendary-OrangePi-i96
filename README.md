@@ -75,3 +75,4 @@ Is it enough?  You'll have to judge for yourself if it's enough but it is enough
 <a href="https://github.com/MesihK/linux-RDA8810/commit/d7089f4c43bd76082459e6995652b578ce2d10f4?diff=unified">Credit to MesihK</a> for the gpio files permissions fix<br>
 <a href="https://4pda.to/forum/index.php?showtopic=813602&st=280">Credit to Yoshie</a> for enough hints to enable the spidev interface<br>
 <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/pull/1">Credit to jakeau</a> for adding the ability to use the i96 as a HID device (PR #1)<br>
+<a href="https://github.com/TheRemote/Legendary-OrangePi-i96/pull/2">Credit to SteveGotthardt</a> for adding the USB serial connection and fixing ACL entries to eliminate warnings (PR #2)<br>
