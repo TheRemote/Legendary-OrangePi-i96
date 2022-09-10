@@ -11,6 +11,7 @@ My blog post that birthed this image is located <a href="https://jamesachambers.
   <li>Adds spidev interface to access SPI over the GPIO pins</li>
   <li>Adds ntp to assist with fixing time on first startup -- use "sudo ntpd -gq" to force a time sync once you've set your correct timezone (sudo dpkg-reconfigure tzdata)</li>
   <li>Adds ability to use the i96 as a HID device (mouse/keyboard emulation)</li>
+  <li>Adds USB serial connection</li>
   <li>Fixed notorious WiFi issues caused by missing crda package and no regulatory domain set (see first startup instructions to set REGDOMAIN)</li>
   <li>Fixed wireless MAC address changing each startup</li>
   <li>Fixed USB port to allow "High Speed" USB devices instead of locking them to "Full Speed"</li>
@@ -48,6 +49,7 @@ Ubuntu is not building correctly yet.<br>
 <br>
 <h2>Version History</h2>
 <ol>
+  <li>September 10th 2022 - V1.10 - Adds USB serial connection. Set ACL to remove warnings from log files (thanks SteveGotthardt, <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/pull/2">PR #2</a>)</li>
   <li>September 4th 2022 - V1.9 - Adds ability to use the i96 as a HID device (thanks jakeau, <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/pull/1">PR #1</a>)</li>
   <li>September 3rd 2022 - V1.8 - Add crda package and instructions to configure regulatory domain (REGDOMAIN)</li>
   <li>September 2nd 2022 - V1.7 - Enable systemd-resolved service to help with DNS over WiFi, remove crashing hostapd service, fix e2scrub_all service, add orangepi user to audio, bluetooth, netdev</li>
