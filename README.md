@@ -49,6 +49,7 @@ Ubuntu is not building correctly yet.<br>
 <br>
 <h2>Version History</h2>
 <ol>
+  <li>September 10th 2022 - V1.11 - Fix USB gadget conflict (thanks SteveGotthardt, <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/pull/3">PR #2</a>)</li>
   <li>September 10th 2022 - V1.10 - Adds USB serial connection. Set ACL to remove warnings from log files (thanks SteveGotthardt, <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/pull/2">PR #2</a>)</li>
   <li>September 4th 2022 - V1.9 - Adds ability to use the i96 as a HID device (thanks jakeau, <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/pull/1">PR #1</a>)</li>
   <li>September 3rd 2022 - V1.8 - Add crda package and instructions to configure regulatory domain (REGDOMAIN)</li>
