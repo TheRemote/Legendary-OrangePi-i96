@@ -187,25 +187,7 @@ do_chroot() {
 
 do_conffile() {
 	mkdir -p $DEST/opt/boot
-	if [ "${PLATFORM}" = "OrangePiH3" ]; then
-		cp $EXTER/install_to_emmc_$OS $DEST/usr/local/sbin/install_to_emmc -f
-		cp $EXTER/uboot/*.bin $DEST/opt/boot/ -f
-		cp $EXTER/resize_rootfs.sh $DEST/usr/local/sbin/ -f
-	elif [ "${PLATFORM}" = "OrangePiH3_mainline" ]; then
-		cp $BUILD/uboot/u-boot-sunxi-with-spl.bin-${BOARD} $DEST/opt/boot/u-boot-sunxi-with-spl.bin -f
-		cp $EXTER/mainline/install_to_emmc_$OS $DEST/usr/local/sbin/install_to_emmc -f
-		cp $EXTER/mainline/resize_rootfs.sh $DEST/usr/local/sbin/ -f
-		cp $EXTER/mainline/boot_emmc/* $DEST/opt/boot/ -f
-	elif [ "${PLATFORM}" = "OrangePiRK3399" ]; then
-		cp $EXTER/install_to_emmc_$OS $DEST/usr/local/sbin/install_to_emmc -f
-		mkdir -p $DEST/usr/local/lib/install_to_emmc
-		cp $BUILD/uboot/*.img $DEST/usr/local/lib/install_to_emmc/ -f
-		cp $BUILD/kernel/boot.img $DEST/usr/local/lib/install_to_emmc/ -f
-		[ -d $DEST/system/etc/firmware ] || mkdir -p $DEST/system/etc/firmware
-		cp -rf $EXTER/firmware/* $DEST/system/etc/firmware
-		cp -rf $EXTER/asound.state $DEST/var/lib/alsa/
-		echo "" >$DEST/etc/fstab
-	elif [ "${PLATFORM}" = "OrangePiRDA" ]; then
+	if [ "${PLATFORM}" = "OrangePiRDA" ]; then
 		cp -rf ${EXTER}/chips/RDA/sbin/* ${DEST}/usr/local/sbin
 		cp -rf ${EXTER}/common/rootfs/100-fs-warning ${DEST}/etc/update-motd.d/
 		cp -rf ${EXTER}/chips/RDA/CameraTest ${DEST}/home/orangepi
@@ -631,7 +613,6 @@ EOF
 		chmod +x "$DEST/usr/local/sbin/gpio_fixup.sh"
 		curl -k -L -o "$DEST/usr/local/bin/opio" https://wiki.pbeirne.com/patb/opio/raw/master/opio
 		chmod +x "$DEST/usr/local/bin/opio"
-		cp "$DEST/usr/local/bin/opio" "$DEST/usr/local/bin/gpio"
 		curl -k -L -o "$DEST/usr/local/bin/devmem2.py" https://wiki.pbeirne.com/patb/i96/raw/master/devmem2.py
 		chmod +x "$DEST/usr/local/bin/devmem2.py"
 		cat >"$DEST/lib/systemd/system/gpio_fixup.service" <<EOF
@@ -655,6 +636,12 @@ EOF
 # Fix AmbientCapabilities of e2scrub_reap.service
 sed -i 's/AmbientCapabilities=.*/AmbientCapabilites=/g' /usr/lib/systemd/system/e2scrub_reap.service
 /bin/systemctl daemon-reload
+
+# Build WiringPi
+cd ~
+git clone https://github.com/MehdiZAABAR/WiringPi.git
+cd WiringPi
+make install
 EOF
 		chmod +x "$DEST/type-phase"
 		do_chroot /type-phase
