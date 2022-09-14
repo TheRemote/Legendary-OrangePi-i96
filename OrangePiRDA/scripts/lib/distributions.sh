@@ -641,7 +641,7 @@ sed -i 's/AmbientCapabilities=.*/AmbientCapabilites=/g' /usr/lib/systemd/system/
 cd ~
 git clone https://github.com/MehdiZAABAR/WiringPi.git
 cd WiringPi
-make install
+make && make install
 EOF
 		chmod +x "$DEST/type-phase"
 		do_chroot /type-phase
