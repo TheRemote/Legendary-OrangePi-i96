@@ -13,6 +13,7 @@ My blog post that birthed this image is located <a href="https://jamesachambers.
   <li>Adds ability to use the i96 as a HID device (mouse/keyboard emulation)</li>
   <li>Adds USB serial connection</li>
   <li>Fixed notorious WiFi issues caused by missing crda package and no regulatory domain set (see first startup instructions to set REGDOMAIN)</li>
+  <li>Fixed Bluetooth and set it up to work at startup using bluetooth patchram utility</li>
   <li>Fixed wireless MAC address changing each startup</li>
   <li>Fixed USB port to allow "High Speed" USB devices instead of locking them to "Full Speed"</li>
   <li>Fixed buggy UART not resetting properly which often breaks copying/pasting through a serial terminal</li>
@@ -49,6 +50,7 @@ Ubuntu is not building correctly yet.<br>
 <br>
 <h2>Version History</h2>
 <ol>
+  <li>September 16th 2022 - V1.13 - Add Bluetooth patchram to enable bluetooth (thanks Marco, <a href="https://github.com/well0nez/RDA5991g_patchram">WiringPi Fork</a>)</li>
   <li>September 14th 2022 - V1.12 - Add fixed WiringPi library (thanks MZA, <a href="https://github.com/MehdiZAABAR/WiringPi">WiringPi Fork</a>)</li>
   <li>September 10th 2022 - V1.11 - Fix USB gadget conflict (thanks SteveGotthardt, <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/pull/3">PR #2</a>)</li>
   <li>September 10th 2022 - V1.10 - Adds USB serial connection. Set ACL to remove warnings from log files (thanks SteveGotthardt, <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/pull/2">PR #2</a>)</li>
@@ -79,3 +81,4 @@ Is it enough?  You'll have to judge for yourself if it's enough but it is enough
 <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/pull/1">Credit to jakeau</a> for adding the ability to use the i96 as a HID device (PR #1)<br>
 <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/pull/2">Credit to SteveGotthardt</a> for adding the USB serial connection and fixing ACL entries to eliminate warnings (PR #2)<br>
 <a href="https://github.com/MehdiZAABAR/WiringPi">Credit to MZA</a> for fixing the WiringPi library to work with the i96<br>
+<a href="https://github.com/well0nez/RDA5991g_patchram">Credit to Marco</a> for fixing the Bluetooth patchram utility to work with the i96<br>

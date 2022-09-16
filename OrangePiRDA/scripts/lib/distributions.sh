@@ -565,12 +565,7 @@ EOF
 		mkdir "$DEST/lib/modules"
 	fi
 
-	if [ $PLATFORM = "OrangePiRK3399" ]; then
-		echo "" >$DEST/etc/fstab
-		echo "ttyFIQ0" >>$DEST/etc/securetty
-		sed -i '/^TimeoutStartSec=/s/5min/15sec/' $DEST/lib/systemd/system/networking.service
-		setup_resize-helper
-	elif [ $PLATFORM = "OrangePiRDA" ]; then
+	if [ $PLATFORM = "OrangePiRDA" ]; then
 		add_resize_rootfs_service
 		cat >"$DEST/etc/fstab" <<EOF
 # OrangePI fstab
@@ -596,7 +591,7 @@ EOF
 
 exit 0
 EOF
-chmod +x "$DEST/etc/rc.local"
+		chmod +x "$DEST/etc/rc.local"
 
 		cat >"$DEST/type-phase" <<EOF
 #!/bin/bash
@@ -642,14 +637,49 @@ cd ~
 git clone https://github.com/MehdiZAABAR/WiringPi.git
 cd WiringPi
 make && make install
+
+cd ..
+git clone https://github.com/well0nez/RDA5991g_patchram
+cd RDA5991g_patchram
+gcc bt_init.c -o bt_init
+cp bt_init /usr/bin/bt_init
+chmod +x /usr/bin/bt_init
 EOF
 		chmod +x "$DEST/type-phase"
 		do_chroot /type-phase
 		sync
 		rm -f "$DEST/type-phase"
 
+		cat >"$DEST/usr/sbin/bt_fixup.sh" <<EOF
+#!/bin/bash
+
+rfkill unblock bluetooth
+bt_init
+hciattach -s 921600 /dev/ttyS1 any 921600 flow
+EOF
+		chmod +x "$DEST/usr/sbin/bt_fixup.sh"
+		cat >"$DEST/lib/systemd/system/bluetooth_fixup.service" <<EOF
+[Unit]
+Description=bluetooth_fixup service
+
+[Service]
+ExecStart=/usr/sbin/bt_fixup.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+		cat >"$DEST/type-phase" <<EOF
+#!/bin/bash
+
+/bin/systemctl enable bluetooth_fixup.service
+EOF
+		chmod +x "$DEST/type-phase"
+		do_chroot /type-phase
+		sync
+		rm -f "$DEST/type-phase"
 	fi
-	
+
 	# Install Kernel modules
 	make -C $LINUX ARCH=${ARCH} CROSS_COMPILE=$TOOLS modules_install INSTALL_MOD_PATH="$DEST"
 
