@@ -467,7 +467,7 @@ apt-get -y update
 #rm -f "/etc/locale.gen"
 #dpkg-reconfigure --frontend noninteractive locales
 
-apt-get -y install sudo imagemagick libv4l-dev cmake bluez apt-transport-https man subversion python3-pip python3-setuptools gpg net-tools g++ libjpeg-dev usbutils curl dosfstools curl xz-utils iw rfkill ifupdown wpasupplicant openssh-server rsync u-boot-tools vim parted network-manager git autoconf gcc libtool ntp libsysfs-dev pkg-config libdrm-dev xutils-dev alsa-utils acl crda
+apt-get -y install sudo imagemagick libv4l-dev cmake bluez bluez-tools apt-transport-https man subversion python3-pip python3-setuptools gpg net-tools g++ libjpeg-dev usbutils curl dosfstools curl xz-utils iw rfkill ifupdown wpasupplicant openssh-server rsync u-boot-tools vim parted network-manager git autoconf gcc libtool ntp libsysfs-dev pkg-config libdrm-dev xutils-dev alsa-utils acl crda
 apt-get -y install $EXTRADEBS
 
 pip3 install spidev

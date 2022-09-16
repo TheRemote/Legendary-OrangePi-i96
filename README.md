@@ -50,6 +50,7 @@ Ubuntu is not building correctly yet.<br>
 <br>
 <h2>Version History</h2>
 <ol>
+  <li>September 16th 2022 - V1.14 - Add bluez-tools package</li>
   <li>September 16th 2022 - V1.13 - Add Bluetooth patchram to enable bluetooth (thanks Marco, <a href="https://github.com/well0nez/RDA5991g_patchram">Bluetooth patchram fix</a>)</li>
   <li>September 14th 2022 - V1.12 - Add fixed WiringPi library (thanks MZA, <a href="https://github.com/MehdiZAABAR/WiringPi">WiringPi Fork</a>)</li>
   <li>September 10th 2022 - V1.11 - Fix USB gadget conflict (thanks SteveGotthardt, <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/pull/3">PR #2</a>)</li>
