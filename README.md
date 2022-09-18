@@ -50,7 +50,7 @@ Ubuntu is not building correctly yet.<br>
 <br>
 <h2>Version History</h2>
 <ol>
-  <li>September 18th 2022 - V1.15 - Fix Bluetooth to have fixed MAC address stored in /data/misc/bluetooth (thanks jakeau, <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/pull/4">PR #4</a>)</li>
+  <li>September 18th 2022 - V1.15 - Fix Bluetooth to have fixed MAC address stored in /data/misc/bluetooth (thanks Marco, <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/pull/4">PR #4</a>)</li>
   <li>September 16th 2022 - V1.14 - Add bluez-tools package</li>
   <li>September 16th 2022 - V1.13 - Add Bluetooth patchram to enable bluetooth (thanks Marco, <a href="https://github.com/well0nez/RDA5991g_patchram">Bluetooth patchram fix</a>)</li>
   <li>September 14th 2022 - V1.12 - Add fixed WiringPi library (thanks MZA, <a href="https://github.com/MehdiZAABAR/WiringPi">WiringPi Fork</a>)</li>
