@@ -689,6 +689,7 @@ EOF
 
 	curl -k -L -o "$DEST/lib/modules/3.10.62-rel5.0.2+/kernel/drivers/net/wireless/rdaw80211/rdawlan/rdawfmac.ko" http://alt.pbeirne.com:3000/patb/i96/raw/master/rdawfmac.ko
 	mkdir -p "$DEST/data/misc/wifi"
+	mkdir -p "$DEST/data/misc/bluetooth/"
 	#rm -rf $BUILD/${DISTRO}_${IMAGETYPE}_rootfs
 	#cp -rfa $DEST $BUILD/${DISTRO}_${IMAGETYPE}_rootfs
 }
