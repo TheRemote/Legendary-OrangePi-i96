@@ -278,21 +278,19 @@ static struct platform_device rda_comreg0 = {
 	.num_resources = ARRAY_SIZE(rda_comreg0_resource),
 };
 
-static struct spi_gpio_platform_data spi_gpio_data = {
-	.sck = 2, // spi pins on the comb
-	.mosi = 4,
-	.miso = 3,
+static struct spi_gpio_platform_data spi2_gpio_data = {
+		.sck = 2, // spi pins on the comb
+		.mosi = 3,
+		.miso = 4,
 
-	.num_chipselect = 1, // this is the number of devices (we will only connect the screen, but can be extended for spidev)
+		.num_chipselect = 2, // this is the number of devices (we will only connect the screen, but can be extended for spidev)
 };
-
-struct platform_device rda_spi_gpio = {
-	.name = "spi_gpio", // spi driver name
-	.id = 3,			// bus number, because spi0 spi1 spi2 is already described in this file, then this one will be 3
-	.dev = {
-		.platform_data = &spi_gpio_data,
-	}};
-
+struct platform_device rda_spi2_gpio = {
+		.name = "spi_gpio", // spi driver name
+		.id = 2,			// bus number spi2 available on GPIO header
+		.dev = {
+				.platform_data = &spi2_gpio_data,
+		}};
 static struct resource rda_md_resource[] = {
 	[0] = {
 		.start = RDA_COMREGS_PHYS,
@@ -1580,14 +1578,25 @@ static struct spi_board_info rda_spi_board_info[] = {
 		.bus_num = 0,
 		.chip_select = 1,
 		.controller_data = (void *)&tlv320aic23_spi,
+		.platform_data = (void *) NULL,
 	},
 	{
 		.modalias = "spidev", // driver name
-		.max_speed_hz = 32000000,
+		.max_speed_hz = 1000000,
 		.mode = SPI_MODE_0,
-		.bus_num = 3, // our spi number is 3
+		.bus_num = 2, // /dev/spidev2.0 using gpio_spi driver
 		.chip_select = 0,
-		.controller_data = (void *) 5, // CS pin 
+		.controller_data = (void *) 10, // SPI2_CS_0 is not available on gpio HEADER, use any other GPIO CS pin
+		.platform_data = (void *) &spi2_gpio_data,
+	},
+	{
+		.modalias = "spidev", // driver name
+		.max_speed_hz = 1000000,
+		.mode = SPI_MODE_0,
+		.bus_num = 2, // /dev/spidev2.1 using gpio_spi driver
+		.chip_select = 1,
+		.controller_data = (void *) 6, // CS pin
+		.platform_data = (void *) &spi2_gpio_data,
 	},
 };
 
@@ -1657,8 +1666,7 @@ static struct platform_device *devices[] __initdata = {
 #endif
 	&rda_spi0,
 	&rda_spi1,
-	&rda_spi2,
-	&rda_spi_gpio,
+	&rda_spi2_gpio,
 	&rda_vibrator,
 	&rda_power_supply,
 #ifdef CONFIG_LEDS_RDA

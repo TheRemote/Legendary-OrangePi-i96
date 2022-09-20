@@ -50,6 +50,7 @@ Ubuntu is not building correctly yet.<br>
 <br>
 <h2>Version History</h2>
 <ol>
+  <li>September 20th 2022 - V1.17 - Add further spidev fixes (thanks MZA, <a href="https://github.com/MehdiZAABAR/OrangePi-I96-Work/">OrangePi-I96-Work</a>)</li>
   <li>September 19th 2022 - V1.16 - Add cpufrequtils package (thanks Marco, <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/pull/5">PR #5</a>)</li>
   <li>September 18th 2022 - V1.15 - Fix Bluetooth to have fixed MAC address stored in /data/misc/bluetooth (thanks Marco, <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/pull/4">PR #4</a>)</li>
   <li>September 16th 2022 - V1.14 - Add bluez-tools package</li>
@@ -83,5 +84,5 @@ Is it enough?  You'll have to judge for yourself if it's enough but it is enough
 <a href="https://4pda.to/forum/index.php?showtopic=813602&st=280">Credit to Yoshie</a> for enough hints to enable the spidev interface<br>
 <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/pull/1">Credit to jakeau</a> for adding the ability to use the i96 as a HID device (PR #1)<br>
 <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/pull/2">Credit to SteveGotthardt</a> for adding the USB serial connection and fixing ACL entries to eliminate warnings (PR #2)<br>
-<a href="https://github.com/MehdiZAABAR/WiringPi">Credit to MZA</a> for fixing the WiringPi library to work with the i96<br>
+<a href="https://github.com/MehdiZAABAR/WiringPi">Credit to MZA</a> for fixing the WiringPi library to work with the i96 as well as fixes to the spidev interface<br>
 <a href="https://github.com/well0nez/RDA5991g_patchram">Credit to Marco</a> for fixing the Bluetooth patchram utility to work with the i96 as well as fixing the Bluetooth MAC address (PR #4)<br>

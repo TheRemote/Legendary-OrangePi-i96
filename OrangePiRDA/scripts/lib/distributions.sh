@@ -604,7 +604,7 @@ EOF
 		rm -f "$DEST/type-phase"
 
 		# GPIO fixup
-		curl -k -L -o "$DEST/usr/local/sbin/gpio_fixup.sh" https://wiki.pbeirne.com/patb/i96/raw/master/gpio_fixup.sh
+		curl -k -L -o "$DEST/usr/local/sbin/gpio_fixup.sh" https://raw.githubusercontent.com/MehdiZAABAR/OrangePi-I96-Work/master/OrangePiRDA/output/rootfs/usr/local/sbin/gpio_fixup.sh
 		chmod +x "$DEST/usr/local/sbin/gpio_fixup.sh"
 		curl -k -L -o "$DEST/usr/local/bin/opio" https://wiki.pbeirne.com/patb/opio/raw/master/opio
 		chmod +x "$DEST/usr/local/bin/opio"
