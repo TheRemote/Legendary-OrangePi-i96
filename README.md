@@ -12,14 +12,16 @@ My blog post that birthed this image is located <a href="https://jamesachambers.
   <li>Adds OPi.GPIO library (able to drive SPI devices such as the Waveshare e-ink display)</li>
   <li>Adds ntp to assist with fixing time on first startup -- use "sudo ntpd -gq" to force a time sync once you've set your correct timezone (sudo dpkg-reconfigure tzdata)</li>
   <li>Adds ability to use the i96 as a HID device (mouse/keyboard emulation)</li>
+  <li>Fixed SD card port to support "High Speed" timing mode and 1.8V voltage (can be seen with sudo cat /sys/kernel/debug/mmc0/ios)</li>
+  <li>Fixed TRIM support (sudo fstrim -av)</li>
   <li>Fixed notorious WiFi issues caused by missing crda package and no regulatory domain set (see first startup instructions to set REGDOMAIN)</li>
   <li>Fixed Bluetooth and set it up to work at startup using bluetooth patchram utility</li>
-  <li>Fixed wireless MAC address changing each startup</li>
+  <li>Fixed wireless and bluetooth MAC addresses changing each startup</li>
   <li>Fixed USB port to allow "High Speed" USB devices instead of locking them to "Full Speed"</li>
   <li>Fixed buggy UART not resetting properly which often breaks copying/pasting through a serial terminal</li>
   <li>Fixed sound issues that would prevent rebooting the system successfully after first startup</li>
   <li>Fixed GPIO permissions errors on startup</li>
-  <li>Fixed orangepi user missing groups audio, bluetooth and netdev</li>
+  <li>Fixed orangepi user missing group membership for audio, bluetooth, netdev, gpio</li>
 </ol>
 
 <h2>First Startup Instructions</h2>
@@ -39,7 +41,7 @@ You should first clone the OrangePi_Build repository:<br>
 <pre>git clone https://github.com/orangepi-xunlong/OrangePi_Build.git
 cd OrangePi_Build
 ./Build_OrangePi.sh</pre><br>
-Choose the "Orange Pi I96" option which will create the "OrangePiRDA" folder.<br>
+Choose the "Orange Pi i96" option which will create the "OrangePiRDA" folder.<br>
 <br>
 The files in this repository are meant to replace the stock OrangePiRDA ones that are generated (specifically in the scripts folder).  You simply copy them over the top of your generated folder like this:<br>
 <pre>cd ..
@@ -50,6 +52,7 @@ Ubuntu is not building correctly yet.<br>
 <br>
 <h2>Version History</h2>
 <ol>
+  <li>September 24th 2022 - V1.20 - Fixed SD card driver to correctly support high-speed mode, fixed TRIM support, decreased boot time by about 10 seconds by reducing rda-backlight timeout, cleaned up distributions.sh into organized functions</li>
   <li>September 23rd 2022 - V1.19 - Add OPi.GPIO library (supports devices such as the Waveshare e-paper display (thanks Michael, <a href="https://github.com/Farnsworth9qc/OPi.GPIO">OPi.GPIO fork), add orangepi user to gpio group, general cleanup/removal of script portions related to other platforms than RDA</li>
   <li>September 22nd 2022 - V1.18 - Enable CONFIG_SND_USB to allow for USB soundcard use</li>
   <li>September 20th 2022 - V1.17 - Add further spidev fixes (thanks MZA, <a href="https://github.com/MehdiZAABAR/OrangePi-I96-Work/">OrangePi-I96-Work</a>)</li>

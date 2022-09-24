@@ -394,11 +394,7 @@ static struct rda_mmc_device_data rda_mmc0_data[] = {
 		.mclk_adj = _TGT_AP_SDMMC1_MCLK_ADJ,
 		.ocr_avail = MMC_VDD_32_33 | MMC_VDD_33_34,
 
-#ifdef CONFIG_MACH_RDA8850E
-		.caps = MMC_CAP_4_BIT_DATA | MMC_CAP_SD_HIGHSPEED,
-#else
-		.caps = MMC_CAP_4_BIT_DATA,
-#endif /* CONFIG_MACH_RDA8850E */
+		.caps = MMC_CAP_4_BIT_DATA | MMC_CAP_UHS_DDR50 | MMC_CAP_SD_HIGHSPEED | MMC_CAP_ERASE | MMC_CAP_1_8V_DDR,
 
 #ifdef _TGT_AP_GPIO_MMC_HOTPLUG
 		.det_pin = _TGT_AP_GPIO_MMC_HOTPLUG,

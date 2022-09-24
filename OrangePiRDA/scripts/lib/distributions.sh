@@ -236,19 +236,159 @@ EOF
 	do_chroot systemctl enable ssh-keygen
 }
 
-add_bt_service() {
-	cat >"$DEST/lib/systemd/system/bt.service" <<EOF
+add_rclocal_service() {
+	echo "Adding rc.local service..."
+	cat >"$DEST/lib/systemd/system/rc-local.service" <<EOF
 [Unit]
-Description=OrangePi BT Service
+Description=rc.local service
 
 [Service]
-ExecStart=/usr/local/sbin/bt.sh
+ExecStart=/etc/rc.local
 RemainAfterExit=yes
 
 [Install]
 WantedBy=multi-user.target
 EOF
-	do_chroot systemctl enable bt.service
+	cat >"$DEST/etc/rc.local" <<EOF
+#!/bin/sh
+
+# Trim drives once on startup
+fstrim -v /
+fstrim -v /media/boot
+
+exit 0
+EOF
+	chmod +x "$DEST/etc/rc.local"
+
+	cat >"$DEST/type-phase" <<EOF
+#!/bin/bash
+
+/bin/systemctl enable rc-local.service
+EOF
+	chmod +x "$DEST/type-phase"
+	do_chroot /type-phase
+	sync
+	rm -f "$DEST/type-phase"
+}
+
+add_fstab() {
+	echo "Adding fstab..."
+	cat >"$DEST/etc/fstab" <<EOF
+# OrangePI fstab
+/dev/mmcblk0p2  /  ext4  errors=remount-ro,noatime,nodiratime  0 1
+/dev/mmcblk0p1  /media/boot  ext2  defaults  0 0
+tmpfs /tmp  tmpfs nodev,nosuid,mode=1777  0 0
+EOF
+}
+
+add_networking() {
+	# Add wireless driver
+	echo "rdawfmac" >>${DEST}/etc/modules-load.d/modules.conf
+	# Remove default eth0 interface
+	rm -rf $DEST/etc/network/interfaces.d/eth0
+
+	cat >"$DEST/type-phase" <<EOF
+#!/bin/bash
+
+# Enable resolved
+/bin/systemctl enable systemd-resolved.service
+
+# Fix AmbientCapabilities of e2scrub_reap.service
+sed -i 's/AmbientCapabilities=.*//g' /usr/lib/systemd/system/e2scrub_reap.service
+/bin/systemctl daemon-reload
+EOF
+	chmod +x "$DEST/type-phase"
+	do_chroot /type-phase
+	sync
+	rm -f "$DEST/type-phase"
+}
+
+add_bluetooth_service() {
+	echo "Adding bluetooth service..."
+	cat >"$DEST/usr/sbin/bt_fixup.sh" <<EOF
+#!/bin/bash
+
+rfkill unblock bluetooth
+bt_init
+hciattach -s 921600 /dev/ttyS1 any 921600 flow
+EOF
+	chmod +x "$DEST/usr/sbin/bt_fixup.sh"
+	cat >"$DEST/lib/systemd/system/bluetooth_fixup.service" <<EOF
+[Unit]
+Description=bluetooth_fixup service
+
+[Service]
+ExecStart=/usr/sbin/bt_fixup.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
+EOF
+	cat >"$DEST/type-phase" <<EOF
+#!/bin/bash
+
+/bin/systemctl enable bluetooth_fixup.service
+
+# Bluetooth patchram to enable functionality
+cd ~
+git clone https://github.com/well0nez/RDA5991g_patchram
+cd RDA5991g_patchram
+gcc bt_init.c -o bt_init
+cp bt_init /usr/bin/bt_init
+chmod +x /usr/bin/bt_init
+EOF
+	chmod +x "$DEST/type-phase"
+	do_chroot /type-phase
+	sync
+	rm -f "$DEST/type-phase"
+}
+
+add_gpio_service() {
+	# GPIO fixup
+	curl -k -L -o "$DEST/usr/local/sbin/gpio_fixup.sh" https://raw.githubusercontent.com/MehdiZAABAR/OrangePi-I96-Work/master/OrangePiRDA/output/rootfs/usr/local/sbin/gpio_fixup.sh
+	chmod +x "$DEST/usr/local/sbin/gpio_fixup.sh"
+	curl -k -L -o "$DEST/usr/local/bin/opio" https://wiki.pbeirne.com/patb/opio/raw/master/opio
+	chmod +x "$DEST/usr/local/bin/opio"
+	curl -k -L -o "$DEST/usr/local/bin/devmem2.py" https://wiki.pbeirne.com/patb/i96/raw/master/devmem2.py
+	chmod +x "$DEST/usr/local/bin/devmem2.py"
+	cat >"$DEST/lib/systemd/system/gpio_fixup.service" <<EOF
+[Unit]
+Description=OrangePi GPIO Fixup
+
+[Service]
+ExecStart=/usr/local/sbin/gpio_fixup.sh
+
+[Install]
+WantedBy=multi-user.target
+EOF
+	cat >"$DEST/type-phase" <<EOF
+#!/bin/bash
+
+/bin/systemctl enable gpio_fixup.service
+
+# Build WiringPi
+cd ~
+git clone https://github.com/MehdiZAABAR/WiringPi.git
+cd WiringPi
+make -j\$(nproc) && make -j\$(nproc) install
+
+# Orange Pi i96 OPi.GPIO library
+cd ..
+git clone https://github.com/Farnsworth9qc/OPi.GPIO.git
+cd OPi.GPIO
+python3 setup.py build
+python3 setup.py install
+groupadd gpio
+adduser orangepi gpio
+EOF
+	chmod +x "$DEST/type-phase"
+	do_chroot /type-phase
+	sync
+	rm -f "$DEST/type-phase"
+
+	cat >"$DEST/etc/udev/rules.d/99-gpio.rules" <<EOF
+SUBSYSTEM=="gpio", KERNEL=="gpiochip*", ACTION=="add", PROGRAM="/bin/sh -c 'chown root:gpio /sys/class/gpio/export /sys/class/gpio/unexport ; chmod 220 /sys/class/gpio/export /sys/class/gpio/unexport'" SUBSYSTEM=="gpio", KERNEL=="gpio*", ACTION=="add", PROGRAM="/bin/sh -c 'chown root:gpio /sys%p/active_low /sys%p/direction /sys%p/edge /sys%p/value ; chmod 660 /sys%p/active_low /sys%p/direction /sys%p/edge /sys%p/value'"
+EOF
 }
 
 add_resize_rootfs_service() {
@@ -274,7 +414,6 @@ EOF
 	do_chroot /type-phase
 	sync
 	rm -f "$DEST/type-phase"
-
 }
 
 add_debian_apt_sources() {
@@ -508,7 +647,6 @@ EOF
 	do_conffile
 	add_ssh_keygen_service
 
-	#	add_bt_service
 	sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
 	rm -f "$DEST"/etc/ssh/ssh_host_*
 
@@ -531,131 +669,12 @@ EOF
 
 	if [ $PLATFORM = "OrangePiRDA" ]; then
 		add_resize_rootfs_service
-		cat >"$DEST/etc/fstab" <<EOF
-# OrangePI fstab
-/dev/mmcblk0p2  /  ext4  errors=remount-ro,noatime,nodiratime  0 1
-/dev/mmcblk0p1  /media/boot  ext2  defaults  0 0
-tmpfs /tmp  tmpfs nodev,nosuid,mode=1777  0 0
-EOF
-		echo "rdawfmac" >>${DEST}/etc/modules-load.d/modules.conf
-		rm -rf $DEST/etc/network/interfaces.d/eth0
-		cat >"$DEST/lib/systemd/system/rc-local.service" <<EOF
-[Unit]
-Description=rc.local service
 
-[Service]
-ExecStart=/etc/rc.local
-RemainAfterExit=yes
-
-[Install]
-WantedBy=multi-user.target
-EOF
-		cat >"$DEST/etc/rc.local" <<EOF
-#!/bin/sh
-
-exit 0
-EOF
-		chmod +x "$DEST/etc/rc.local"
-
-		cat >"$DEST/type-phase" <<EOF
-#!/bin/bash
-
-/bin/systemctl enable rc-local.service
-EOF
-		chmod +x "$DEST/type-phase"
-		do_chroot /type-phase
-		sync
-		rm -f "$DEST/type-phase"
-
-		# GPIO fixup
-		curl -k -L -o "$DEST/usr/local/sbin/gpio_fixup.sh" https://raw.githubusercontent.com/MehdiZAABAR/OrangePi-I96-Work/master/OrangePiRDA/output/rootfs/usr/local/sbin/gpio_fixup.sh
-		chmod +x "$DEST/usr/local/sbin/gpio_fixup.sh"
-		curl -k -L -o "$DEST/usr/local/bin/opio" https://wiki.pbeirne.com/patb/opio/raw/master/opio
-		chmod +x "$DEST/usr/local/bin/opio"
-		curl -k -L -o "$DEST/usr/local/bin/devmem2.py" https://wiki.pbeirne.com/patb/i96/raw/master/devmem2.py
-		chmod +x "$DEST/usr/local/bin/devmem2.py"
-		cat >"$DEST/lib/systemd/system/gpio_fixup.service" <<EOF
-[Unit]
-Description=OrangePi GPIO Fixup
-
-[Service]
-ExecStart=/usr/local/sbin/gpio_fixup.sh
-
-[Install]
-WantedBy=multi-user.target
-EOF
-		cat >"$DEST/type-phase" <<EOF
-#!/bin/bash
-
-/bin/systemctl enable gpio_fixup.service
-
-# Enable resolved
-/bin/systemctl enable systemd-resolved.service
-
-# Fix AmbientCapabilities of e2scrub_reap.service
-sed -i 's/AmbientCapabilities=.*/AmbientCapabilites=/g' /usr/lib/systemd/system/e2scrub_reap.service
-/bin/systemctl daemon-reload
-
-# Build WiringPi
-cd ~
-git clone https://github.com/MehdiZAABAR/WiringPi.git
-cd WiringPi
-make -j\$(nproc) && make -j\$(nproc) install
-
-# Bluetooth patchram to enable functionality
-cd ..
-git clone https://github.com/well0nez/RDA5991g_patchram
-cd RDA5991g_patchram
-gcc bt_init.c -o bt_init
-cp bt_init /usr/bin/bt_init
-chmod +x /usr/bin/bt_init
-
-# Orange Pi i96 OPi.GPIO library
-cd ..
-git clone https://github.com/Farnsworth9qc/OPi.GPIO.git
-cd OPi.GPIO
-python3 setup.py build
-python3 setup.py install
-groupadd gpio
-adduser orangepi gpio
-EOF
-		chmod +x "$DEST/type-phase"
-		do_chroot /type-phase
-		sync
-		rm -f "$DEST/type-phase"
-
-		cat >"$DEST/etc/udev/rules.d/99-gpio.rules" <<EOF
-SUBSYSTEM=="gpio", KERNEL=="gpiochip*", ACTION=="add", PROGRAM="/bin/sh -c 'chown root:gpio /sys/class/gpio/export /sys/class/gpio/unexport ; chmod 220 /sys/class/gpio/export /sys/class/gpio/unexport'" SUBSYSTEM=="gpio", KERNEL=="gpio*", ACTION=="add", PROGRAM="/bin/sh -c 'chown root:gpio /sys%p/active_low /sys%p/direction /sys%p/edge /sys%p/value ; chmod 660 /sys%p/active_low /sys%p/direction /sys%p/edge /sys%p/value'"
-EOF
-
-		cat >"$DEST/usr/sbin/bt_fixup.sh" <<EOF
-#!/bin/bash
-
-rfkill unblock bluetooth
-bt_init
-hciattach -s 921600 /dev/ttyS1 any 921600 flow
-EOF
-		chmod +x "$DEST/usr/sbin/bt_fixup.sh"
-		cat >"$DEST/lib/systemd/system/bluetooth_fixup.service" <<EOF
-[Unit]
-Description=bluetooth_fixup service
-
-[Service]
-ExecStart=/usr/sbin/bt_fixup.sh
-RemainAfterExit=yes
-
-[Install]
-WantedBy=multi-user.target
-EOF
-		cat >"$DEST/type-phase" <<EOF
-#!/bin/bash
-
-/bin/systemctl enable bluetooth_fixup.service
-EOF
-		chmod +x "$DEST/type-phase"
-		do_chroot /type-phase
-		sync
-		rm -f "$DEST/type-phase"
+		add_networking
+		add_fstab
+		add_rclocal_service
+		add_gpio_service
+		add_bluetooth_service
 	fi
 
 	# Install Kernel modules
