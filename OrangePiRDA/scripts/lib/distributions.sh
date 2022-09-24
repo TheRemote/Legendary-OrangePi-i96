@@ -236,22 +236,6 @@ EOF
 	do_chroot systemctl enable ssh-keygen
 }
 
-add_opi_python_gpio_libs() {
-	cp $EXTER/packages/OPi.GPIO $DEST/usr/local/sbin/ -rfa
-	cp $EXTER/packages/OPi.GPIO/test_gpio.py $DEST/usr/local/sbin/ -f
-
-	cat >"$DEST/install_opi_gpio" <<EOF
-#!/bin/bash
-apt update
-apt-get install -y python3-pip python3-setuptools
-cd /usr/local/sbin/OPi.GPIO
-python3 setup.py install
-EOF
-	chmod +x "$DEST/install_opi_gpio"
-	do_chroot /install_opi_gpio
-	rm $DEST/install_opi_gpio
-}
-
 add_bt_service() {
 	cat >"$DEST/lib/systemd/system/bt.service" <<EOF
 [Unit]
@@ -265,15 +249,6 @@ RemainAfterExit=yes
 WantedBy=multi-user.target
 EOF
 	do_chroot systemctl enable bt.service
-}
-
-add_opi_config_libs() {
-	do_chroot apt-get install -y dialog expect bc cpufrequtils figlet toilet lsb-release
-	cp $EXTER/packages/opi_config_libs $DEST/usr/local/sbin/ -rfa
-	cp $EXTER/packages/opi_config_libs/opi-config $DEST/usr/local/sbin/ -rfa
-
-	rm -rf $DEST/etc/update-motd.d/*
-	cp $EXTER/packages/opi_config_libs/overlay/* $DEST/ -rf
 }
 
 add_resize_rootfs_service() {
@@ -440,7 +415,7 @@ prepare_rootfs_server() {
 	if [ "$DISTRO" = "xenial" -o "$DISTRO" = "bionic" -o "$DISTRO" = "jammy" -o "$DISTRO" = "focal" ]; then
 		DEB=ubuntu
 		DEBUSER=orangepi
-		EXTRADEBS="gpg software-properties-common libjpeg8-dev usbmount zram-config ubuntu-minimal net-tools usbutils curl locales"
+		EXTRADEBS=""
 		ADDPPACMD=
 		DISPTOOLCMD=
 	elif [ "$DISTRO" = "sid" -o "$DISTRO" = "stretch" -o "$DISTRO" = "stable" -o "$DISTRO" = "bullseye" ]; then
@@ -460,23 +435,16 @@ prepare_rootfs_server() {
 export DEBIAN_FRONTEND=noninteractive
 
 apt-get -y update
-# Disabling locales change due to breaking serial terminals on some systems
-#apt-get -y install locales
-#echo "locales locales/default_environment_locale select en_US.UTF-8" | debconf-set-selections
-#echo "locales locales/locales_to_be_generated multiselect en_US.UTF-8 UTF-8" | debconf-set-selections
-#rm -f "/etc/locale.gen"
-#dpkg-reconfigure --frontend noninteractive locales
+apt-get -y install curl locales sudo imagemagick libv4l-dev cmake bluez bluez-tools apt-transport-https man-db subversion python3-pip python3-setuptools gpg net-tools g++ libjpeg-dev usbutils dosfstools curl xz-utils iw rfkill ifupdown wpasupplicant openssh-server rsync u-boot-tools vim parted network-manager git autoconf gcc libtool ntp libsysfs-dev pkg-config libdrm-dev xutils-dev alsa-utils acl crda cpufrequtils
 
-apt-get -y install sudo imagemagick libv4l-dev cmake bluez bluez-tools apt-transport-https man subversion python3-pip python3-setuptools gpg net-tools g++ libjpeg-dev usbutils curl dosfstools curl xz-utils iw rfkill ifupdown wpasupplicant openssh-server rsync u-boot-tools vim parted network-manager git autoconf gcc libtool ntp libsysfs-dev pkg-config libdrm-dev xutils-dev alsa-utils acl crda cpufrequtils
-apt-get -y install $EXTRADEBS
-
+# Install Python spidev library
 pip3 install spidev
 
 apt-get install -f
 
 apt-get -y remove --purge modemmanager
 $ADDPPACMD
-apt-get -y update && apt-get -y dist-upgrade
+apt-get -y dist-upgrade && apt-get -y autoremove
 $DISPTOOLCMD
 adduser --gecos $DEBUSER --disabled-login $DEBUSER --uid 1000
 adduser --gecos root --disabled-login root --uid 0
@@ -490,7 +458,7 @@ usermod -a -G plugdev $DEBUSER
 usermod -a -G audio $DEBUSER
 usermod -a -G bluetooth $DEBUSER
 usermod -a -G netdev $DEBUSER
-apt-get -y autoremove
+usermod -a -G dialout $DEBUSER
 apt-get clean
 ntpd -gq
 EOF
@@ -513,15 +481,12 @@ prepare_rootfs_desktop() {
 }
 
 server_setup() {
-	if [ $BOARD = "zero_plus2_h3" ]; then
-		:
-	else
-		mkdir -p "$DEST/etc/network/interfaces.d"
-		cat >"$DEST/etc/network/interfaces.d/eth0" <<EOF
+	mkdir -p "$DEST/etc/network/interfaces.d"
+	cat >"$DEST/etc/network/interfaces.d/eth0" <<EOF
 auto eth0
 iface eth0 inet dhcp
 EOF
-	fi
+
 	cat >"$DEST/etc/hostname" <<EOF
 orangepi${BOARD}
 EOF
@@ -542,8 +507,7 @@ EOF
 
 	do_conffile
 	add_ssh_keygen_service
-	#	add_opi_python_gpio_libs
-	#	add_opi_config_libs
+
 	#	add_bt_service
 	sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
 	rm -f "$DEST"/etc/ssh/ssh_host_*
@@ -636,19 +600,33 @@ sed -i 's/AmbientCapabilities=.*/AmbientCapabilites=/g' /usr/lib/systemd/system/
 cd ~
 git clone https://github.com/MehdiZAABAR/WiringPi.git
 cd WiringPi
-make && make install
+make -j\$(nproc) && make -j\$(nproc) install
 
+# Bluetooth patchram to enable functionality
 cd ..
 git clone https://github.com/well0nez/RDA5991g_patchram
 cd RDA5991g_patchram
 gcc bt_init.c -o bt_init
 cp bt_init /usr/bin/bt_init
 chmod +x /usr/bin/bt_init
+
+# Orange Pi i96 OPi.GPIO library
+cd ..
+git clone https://github.com/Farnsworth9qc/OPi.GPIO.git
+cd OPi.GPIO
+python3 setup.py build
+python3 setup.py install
+groupadd gpio
+adduser orangepi gpio
 EOF
 		chmod +x "$DEST/type-phase"
 		do_chroot /type-phase
 		sync
 		rm -f "$DEST/type-phase"
+
+		cat >"$DEST/etc/udev/rules.d/99-gpio.rules" <<EOF
+SUBSYSTEM=="gpio", KERNEL=="gpiochip*", ACTION=="add", PROGRAM="/bin/sh -c 'chown root:gpio /sys/class/gpio/export /sys/class/gpio/unexport ; chmod 220 /sys/class/gpio/export /sys/class/gpio/unexport'" SUBSYSTEM=="gpio", KERNEL=="gpio*", ACTION=="add", PROGRAM="/bin/sh -c 'chown root:gpio /sys%p/active_low /sys%p/direction /sys%p/edge /sys%p/value ; chmod 660 /sys%p/active_low /sys%p/direction /sys%p/edge /sys%p/value'"
+EOF
 
 		cat >"$DEST/usr/sbin/bt_fixup.sh" <<EOF
 #!/bin/bash
@@ -695,22 +673,7 @@ EOF
 }
 
 desktop_setup() {
-	if [ "$PLATFORM" = "OrangePiRK3399" ]; then
-		sed -i '/^wallpaper=/s/\/etc\/alternatives\/desktop-background/\/usr\/share\/lxde\/wallpapers\/newxitong_17.jpg/' $DEST/etc/xdg/pcmanfm/LXDE/pcmanfm.conf
-		sed -i '/^[ ]*transparent=/s/0/1/' $DEST/etc/xdg/lxpanel/LXDE/panels/panel
-		sed -i '/^[ ]*background=/s/1/0/' $DEST/etc/xdg/lxpanel/LXDE/panels/panel
-
-		echo -e "\n[keyfile]\nunmanaged-devices=*,except:type:ethernet,except:type:wifi,except:type:wwan" >>${DEST}/etc/NetworkManager/NetworkManager.conf
-		[ "$DISTRO" = "bullseye" ] && echo -e "\n[device]\nwifi.scan-rand-mac-address=no" >>$DEST/etc/NetworkManager/NetworkManager.conf
-		[ "$DISTRO" = "bullseye" ] && cp -rfa $EXTER/packages/others/glmark2/* "$DEST"
-		[ "$DISTRO" = "jammy" -o "$DISTRO" = "focal" ] && setup_front
-		cp -rfa "$EXTER/packages" "$DEST"
-		cp -rfa "$EXTER/packages/overlay/*" "$DEST"
-		install_gstreamer
-		install_gpu_lib
-		rm -rf "$DEST/packages"
-	fi
-
+	echo ""
 }
 
 build_rootfs() {

@@ -9,9 +9,9 @@ My blog post that birthed this image is located <a href="https://jamesachambers.
 <ol>
   <li>Adds fixed version of WiringPi tool by MZA as well as an altenative tool by patb called opio and fixes GPIO pin assignments</li>
   <li>Adds spidev interface to access SPI over the GPIO pins</li>
+  <li>Adds OPi.GPIO library (able to drive SPI devices such as the Waveshare e-ink display)</li>
   <li>Adds ntp to assist with fixing time on first startup -- use "sudo ntpd -gq" to force a time sync once you've set your correct timezone (sudo dpkg-reconfigure tzdata)</li>
   <li>Adds ability to use the i96 as a HID device (mouse/keyboard emulation)</li>
-  <li>Adds USB serial connection</li>
   <li>Fixed notorious WiFi issues caused by missing crda package and no regulatory domain set (see first startup instructions to set REGDOMAIN)</li>
   <li>Fixed Bluetooth and set it up to work at startup using bluetooth patchram utility</li>
   <li>Fixed wireless MAC address changing each startup</li>
@@ -50,6 +50,7 @@ Ubuntu is not building correctly yet.<br>
 <br>
 <h2>Version History</h2>
 <ol>
+  <li>September 23rd 2022 - V1.19 - Add OPi.GPIO library (supports devices such as the Waveshare e-paper display (thanks Michael, <a href="https://github.com/Farnsworth9qc/OPi.GPIO">OPi.GPIO fork), add orangepi user to gpio group, general cleanup/removal of script portions related to other platforms than RDA</li>
   <li>September 22nd 2022 - V1.18 - Enable CONFIG_SND_USB to allow for USB soundcard use</li>
   <li>September 20th 2022 - V1.17 - Add further spidev fixes (thanks MZA, <a href="https://github.com/MehdiZAABAR/OrangePi-I96-Work/">OrangePi-I96-Work</a>)</li>
   <li>September 19th 2022 - V1.16 - Add cpufrequtils package (thanks Marco, <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/pull/5">PR #5</a>)</li>
@@ -87,3 +88,4 @@ Is it enough?  You'll have to judge for yourself if it's enough but it is enough
 <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/pull/2">Credit to SteveGotthardt</a> for adding the USB serial connection and fixing ACL entries to eliminate warnings (PR #2)<br>
 <a href="https://github.com/MehdiZAABAR/WiringPi">Credit to MZA</a> for fixing the WiringPi library to work with the i96 as well as fixes to the spidev interface<br>
 <a href="https://github.com/well0nez/RDA5991g_patchram">Credit to Marco</a> for fixing the Bluetooth patchram utility to work with the i96 as well as fixing the Bluetooth MAC address (PR #4)<br>
+<a href="https://github.com/Farnsworth9qc/OPi.GPIO">Credit to Michael</a> for adding i96 support to OPi.GPIO library.  Also see his <a href="https://github.com/Farnsworth9qc/e-Paper">Waveshare e-paper display fork</a> for getting a Waveshare e-ink screen working with the i96<br>
