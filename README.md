@@ -54,7 +54,7 @@ Ubuntu is not building correctly yet.<br>
 <ol>
   <li>September 24th 2022 - V1.21 - Fixed "unrecognized mount option 'hidepid=invisible' or missing value" error</li>
   <li>September 24th 2022 - V1.20 - Fixed SD card driver to correctly support high-speed mode, fixed TRIM support, decreased boot time by about 10 seconds by reducing rda-backlight timeout, cleaned up distributions.sh into organized functions</li>
-  <li>September 23rd 2022 - V1.19 - Add OPi.GPIO library (supports devices such as the Waveshare e-paper display (thanks Michael, <a href="https://github.com/Farnsworth9qc/OPi.GPIO">OPi.GPIO fork), add orangepi user to gpio group, general cleanup/removal of script portions related to other platforms than RDA</li>
+  <li>September 23rd 2022 - V1.19 - Add OPi.GPIO library (supports devices such as the Waveshare e-paper display (thanks Michael, <a href="https://github.com/Farnsworth9qc/OPi.GPIO">OPi.GPIO fork</a>), add orangepi user to gpio group, general cleanup/removal of script portions related to other platforms than RDA</li>
   <li>September 22nd 2022 - V1.18 - Enable CONFIG_SND_USB to allow for USB soundcard use</li>
   <li>September 20th 2022 - V1.17 - Add further spidev fixes (thanks MZA, <a href="https://github.com/MehdiZAABAR/OrangePi-I96-Work/">OrangePi-I96-Work</a>)</li>
   <li>September 19th 2022 - V1.16 - Add cpufrequtils package (thanks Marco, <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/pull/5">PR #5</a>)</li>
