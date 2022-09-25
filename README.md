@@ -7,7 +7,7 @@ My blog post that birthed this image is located <a href="https://jamesachambers.
 <br>
 <h2>Fixes</h2>
 <ol>
-  <li>Adds fixed version of WiringPi tool by MZA as well as an altenative tool by patb called opio and fixes GPIO pin assignments</li>
+  <li>Adds fixed version of WiringPi tool as well as an altenative tool "opio" and fixes GPIO pin assignments</li>
   <li>Adds spidev interface to access SPI over the GPIO pins</li>
   <li>Adds OPi.GPIO library (able to drive SPI devices such as the Waveshare e-ink display)</li>
   <li>Adds ntp to assist with fixing time on first startup -- use "sudo ntpd -gq" to force a time sync once you've set your correct timezone (sudo dpkg-reconfigure tzdata)</li>
