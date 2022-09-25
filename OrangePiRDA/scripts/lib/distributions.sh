@@ -281,8 +281,34 @@ EOF
 }
 
 add_networking() {
+	# Main networking
+	mkdir -p "$DEST/etc/network/interfaces.d"
+	cat >"$DEST/etc/network/interfaces.d/eth0" <<EOF
+auto eth0
+iface eth0 inet dhcp
+EOF
+
+	cat >"$DEST/etc/hostname" <<EOF
+orangepi${BOARD}
+EOF
+	cat >"$DEST/etc/hosts" <<EOF
+127.0.0.1 localhost
+127.0.1.1 orangepi${BOARD}
+
+# The following lines are desirable for IPv6 capable hosts
+::1     localhost ip6-localhost ip6-loopback
+fe00::0 ip6-localnet
+ff00::0 ip6-mcastprefix
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+EOF
+	cat >"$DEST/etc/resolv.conf" <<EOF
+nameserver 8.8.8.8
+EOF
+
 	# Add wireless driver
 	echo "rdawfmac" >>${DEST}/etc/modules-load.d/modules.conf
+
 	# Remove default eth0 interface
 	rm -rf $DEST/etc/network/interfaces.d/eth0
 
@@ -291,6 +317,9 @@ add_networking() {
 
 # Enable resolved
 /bin/systemctl enable systemd-resolved.service
+
+# Enable haveged
+/bin/systemctl enable haveged.service
 
 # Fix AmbientCapabilities of e2scrub_reap.service
 sed -i 's/AmbientCapabilities=.*//g' /usr/lib/systemd/system/e2scrub_reap.service
@@ -330,7 +359,7 @@ EOF
 
 # Bluetooth patchram to enable functionality
 cd ~
-git clone https://github.com/well0nez/RDA5991g_patchram
+git clone https://github.com/well0nez/RDA5991g_patchram --depth=1
 cd RDA5991g_patchram
 gcc bt_init.c -o bt_init
 cp bt_init /usr/bin/bt_init
@@ -367,13 +396,13 @@ EOF
 
 # Build WiringPi
 cd ~
-git clone https://github.com/MehdiZAABAR/WiringPi.git
+git clone https://github.com/MehdiZAABAR/WiringPi.git --depth=1
 cd WiringPi
 make -j\$(nproc) && make -j\$(nproc) install
 
 # Orange Pi i96 OPi.GPIO library
 cd ..
-git clone https://github.com/Farnsworth9qc/OPi.GPIO.git
+git clone https://github.com/Farnsworth9qc/OPi.GPIO.git --depth=1
 cd OPi.GPIO
 python3 setup.py build
 python3 setup.py install
@@ -573,7 +602,7 @@ prepare_rootfs_server() {
 export DEBIAN_FRONTEND=noninteractive
 
 apt-get -y update
-apt-get -y install curl locales sudo imagemagick libv4l-dev cmake bluez bluez-tools apt-transport-https man-db subversion python3-pip python3-setuptools gpg net-tools g++ libjpeg-dev usbutils dosfstools curl xz-utils iw rfkill ifupdown wpasupplicant openssh-server rsync u-boot-tools vim parted network-manager git autoconf gcc libtool ntp libsysfs-dev pkg-config libdrm-dev xutils-dev alsa-utils acl crda cpufrequtils
+apt-get -y install curl locales sudo imagemagick haveged lshw libnl-3-dev libnl-genl-3-dev libv4l-dev cmake bluez wireless-tools bluez-tools apt-transport-https man-db subversion python3-pip python3-setuptools gpg net-tools g++ libjpeg-dev usbutils dosfstools curl xz-utils iw rfkill ifupdown wpasupplicant openssh-server rsync u-boot-tools vim parted git autoconf gcc libtool ntp libsysfs-dev pkg-config libdrm-dev xutils-dev alsa-utils acl crda cpufrequtils network-manager
 
 # Install Python spidev library
 pip3 install spidev
@@ -605,6 +634,35 @@ EOF
 	rm -f "$DEST/second-phase"
 	rm -f "$DEST/etc/resolv.conf"
 
+	add_networking
+	do_conffile
+	add_ssh_keygen_service
+	add_resize_rootfs_service
+	add_fstab
+	add_rclocal_service
+	add_gpio_service
+	add_bluetooth_service
+
+	# Create getty terminal service
+	sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
+	rm -f "$DEST"/etc/ssh/ssh_host_*
+
+	# Create folders for WiFi and Bluetooth MAC addresses
+	mkdir -p "$DEST/data/misc/wifi"
+	mkdir -p "$DEST/data/misc/bluetooth/"
+
+	# Copy WLANMAC and BTMAC from external if they exist (convenience for building so it always has the same addresses)
+	if [ -e "${EXTER}/WLANMAC" ]; then
+		cp "${EXTER}/WLANMAC" "$DEST/data/misc/wifi/WLANMAC"
+	fi
+	if [ -e "${EXTER}/BTMAC" ]; then
+		cp "${EXTER}/BTMAC" "$DEST/data/misc/bluetooth/BTMAC"
+	fi
+	# Copy preconfigured network file if it exists
+	if [ -e "${EXTER}/interfaces" ]; then
+		cp "${EXTER}/interfaces" "$DEST/etc/network/interfaces"
+	fi
+
 	cd $BUILD
 	tar czf ${DISTRO}_server_rootfs.tar.gz rootfs
 	cd -
@@ -619,61 +677,15 @@ prepare_rootfs_desktop() {
 }
 
 server_setup() {
-	mkdir -p "$DEST/etc/network/interfaces.d"
-	cat >"$DEST/etc/network/interfaces.d/eth0" <<EOF
-auto eth0
-iface eth0 inet dhcp
-EOF
-
-	cat >"$DEST/etc/hostname" <<EOF
-orangepi${BOARD}
-EOF
-	cat >"$DEST/etc/hosts" <<EOF
-127.0.0.1 localhost
-127.0.1.1 orangepi${BOARD}
-
-# The following lines are desirable for IPv6 capable hosts
-::1     localhost ip6-localhost ip6-loopback
-fe00::0 ip6-localnet
-ff00::0 ip6-mcastprefix
-ff02::1 ip6-allnodes
-ff02::2 ip6-allrouters
-EOF
-	cat >"$DEST/etc/resolv.conf" <<EOF
-nameserver 8.8.8.8
-EOF
-
-	do_conffile
-	add_ssh_keygen_service
-
-	sed -i 's|After=rc.local.service|#\0|;' "$DEST/lib/systemd/system/serial-getty@.service"
-	rm -f "$DEST"/etc/ssh/ssh_host_*
-
 	# Bring back folders
 	mkdir -p "$DEST/lib"
 	mkdir -p "$DEST/usr"
 
-	# Create fstab
-	cat >"$DEST/etc/fstab" <<EOF
-# <file system>	<dir>	<type>	<options>			<dump>	<pass>
-/dev/mmcblk0p1	/boot	vfat	defaults			0		2
-/dev/mmcblk0p2	/	ext4	defaults,noatime		0		1
-EOF
 	if [ ! -d $DEST/lib/modules ]; then
 		mkdir "$DEST/lib/modules"
 	else
 		rm -rf $DEST/lib/modules
 		mkdir "$DEST/lib/modules"
-	fi
-
-	if [ $PLATFORM = "OrangePiRDA" ]; then
-		add_resize_rootfs_service
-
-		add_networking
-		add_fstab
-		add_rclocal_service
-		add_gpio_service
-		add_bluetooth_service
 	fi
 
 	# Install Kernel modules
@@ -683,21 +695,8 @@ EOF
 	make -C $LINUX ARCH=${ARCH} CROSS_COMPILE=$TOOLS headers_install INSTALL_HDR_PATH="$DEST/usr/local"
 	#cp $EXTER/firmware $DEST/lib/ -rf
 
-	# Replace wireless driver
-	curl -k -L -o "$DEST/lib/modules/3.10.62-rel5.0.2+/kernel/drivers/net/wireless/rdaw80211/rdawlan/rdawfmac.ko" http://alt.pbeirne.com:3000/patb/i96/raw/master/rdawfmac.ko
-	mkdir -p "$DEST/data/misc/wifi"
-	mkdir -p "$DEST/data/misc/bluetooth/"
-
 	#rm -rf $BUILD/${DISTRO}_${IMAGETYPE}_rootfs
 	#cp -rfa $DEST $BUILD/${DISTRO}_${IMAGETYPE}_rootfs
-
-	# Copy WLANMAC and BTMAC from external if they exist (convenience for building so it always has the same addresses)
-	if [ -e "${EXTER}/WLANMAC" ]; then
-		cp "${EXTER}/WLANMAC" "$DEST/data/misc/wifi/WLANMAC"
-	fi
-	if [ -e "${EXTER}/BTMAC" ]; then
-		cp "${EXTER}/BTMAC" "$DEST/data/misc/bluetooth/BTMAC"
-	fi
 }
 
 desktop_setup() {

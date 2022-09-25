@@ -21,6 +21,7 @@ My blog post that birthed this image is located <a href="https://jamesachambers.
   <li>Fixed buggy UART not resetting properly which often breaks copying/pasting through a serial terminal</li>
   <li>Fixed sound issues that would prevent rebooting the system successfully after first startup</li>
   <li>Fixed GPIO permissions errors on startup</li>
+  <li>Fixed low entropy (random number) issues by installing haveged service</li>
   <li>Fixed orangepi user missing group membership for audio, bluetooth, netdev, gpio</li>
 </ol>
 
@@ -38,7 +39,7 @@ Press Ctrl+X then Y to save the file.
 
 <h2>Build Instructions</h2>
 You should first clone the OrangePi_Build repository:<br>
-<pre>git clone https://github.com/orangepi-xunlong/OrangePi_Build.git
+<pre>git clone https://github.com/orangepi-xunlong/OrangePi_Build.git --depth=1
 cd OrangePi_Build
 ./Build_OrangePi.sh</pre><br>
 Choose the "Orange Pi i96" option which will create the "OrangePiRDA" folder.<br>
@@ -52,6 +53,7 @@ Ubuntu is not building correctly yet.<br>
 <br>
 <h2>Version History</h2>
 <ol>
+  <li>September 25th 2022 - V1.22 - Ported wireless fixes to source instead of binary driver, more distributions.sh organization into functions, add packages wireless-tools/lshw/haveged/libnl-3-dev/libnl-genl-3-dev, use rootfs caching more efficiently for rebuilding</li>
   <li>September 24th 2022 - V1.21 - Fixed "unrecognized mount option 'hidepid=invisible' or missing value" error</li>
   <li>September 24th 2022 - V1.20 - Fixed SD card driver to correctly support high-speed mode, fixed TRIM support, decreased boot time by about 10 seconds by reducing rda-backlight timeout, cleaned up distributions.sh into organized functions</li>
   <li>September 23rd 2022 - V1.19 - Add OPi.GPIO library (supports devices such as the Waveshare e-paper display (thanks Michael, <a href="https://github.com/Farnsworth9qc/OPi.GPIO">OPi.GPIO fork</a>), add orangepi user to gpio group, general cleanup/removal of script portions related to other platforms than RDA</li>
@@ -85,7 +87,7 @@ Is it enough?  You'll have to judge for yourself if it's enough but it is enough
 <a href="https://forum.armbian.com/topic/3232-orange-pi-2g-iot/page/6/">Credit to Gabor Hidvegi for the patch itself</a> as I found his patch (which wasn't as effective for the 2G version as he would have liked due to the modem initialization dropping the speed) to be working as-is for the regular i96 without the 2G modem present.<br>
 <a href="https://github.com/orangepi-xunlong/OrangePiRDA_kernel/pull/2">Credit to GMMan</a> for the pull request on the official repository to fix sound playback kernel parameter issues<br>
 <a href="https://github.com/orangepi-xunlong/OrangePiRDA_kernel/pull/3">Credit to GMMan again</a> for the pull request on the official repository to fix UART serial issues fixing copy/pasting<br>
-<a href="https://wiki.pbeirne.com/patb/i96/src/master/gpio_fixup.sh">Credit to patb</a> for gpio_fixup.sh / devmem2.py which fixes the GPIO pins and the <a href="https://wiki.pbeirne.com/patb/opio">gpio tool replacement for WiringPi</a> as well as a <a href="https://wiki.pbeirne.com/patb/i96/">wireless driver which prevents the MAC address from changing each boot</a><br>
+<a href="https://wiki.pbeirne.com/patb/i96/src/master/gpio_fixup.sh">Credit to patb</a> for gpio_fixup.sh / devmem2.py which fixes the GPIO pins and the <a href="https://wiki.pbeirne.com/patb/opio">gpio tool replacement for WiringPi</a><br>
 <a href="https://github.com/MesihK/linux-RDA8810/commit/d7089f4c43bd76082459e6995652b578ce2d10f4?diff=unified">Credit to MesihK</a> for the gpio files permissions fix<br>
 <a href="https://4pda.to/forum/index.php?showtopic=813602&st=280">Credit to Yoshie</a> for enough hints to enable the spidev interface<br>
 <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/pull/1">Credit to jakeau</a> for adding the ability to use the i96 as a HID device (PR #1)<br>
