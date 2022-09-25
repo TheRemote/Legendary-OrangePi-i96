@@ -232,7 +232,7 @@ RemainAfterExit=yes
 WantedBy=ssh.service
 EOF
 	do_chroot systemctl enable ssh-keygen
-	do_chroot /usr/bin/ssh-keygen -A
+	#do_chroot /usr/bin/ssh-keygen -A
 }
 
 add_rclocal_service() {
