@@ -12,7 +12,7 @@ My blog post that birthed this image is located <a href="https://jamesachambers.
   <li>Adds OPi.GPIO library (able to drive SPI devices such as the Waveshare e-ink display)</li>
   <li>Adds ntp to assist with fixing time on first startup -- use "sudo ntpd -gq" to force a time sync once you've set your correct timezone (sudo dpkg-reconfigure tzdata)</li>
   <li>Adds ability to use the i96 as a HID device (mouse/keyboard emulation)</li>
-  <li>Fixed SD card port to support "High Speed" timing mode and 1.8V voltage (can be seen with sudo cat /sys/kernel/debug/mmc0/ios)</li>
+  <li>Fixed SD card port to support "High Speed" timing mode (can be seen with sudo cat /sys/kernel/debug/mmc0/ios)</li>
   <li>Fixed TRIM support (sudo fstrim -av)</li>
   <li>Fixed notorious WiFi issues caused by missing crda package and no regulatory domain set (see first startup instructions to set REGDOMAIN)</li>
   <li>Fixed Bluetooth and set it up to work at startup using bluetooth patchram utility</li>
@@ -52,6 +52,7 @@ Ubuntu is not building correctly yet.<br>
 <br>
 <h2>Version History</h2>
 <ol>
+  <li>September 24th 2022 - V1.21 - Fixed "unrecognized mount option 'hidepid=invisible' or missing value" error</li>
   <li>September 24th 2022 - V1.20 - Fixed SD card driver to correctly support high-speed mode, fixed TRIM support, decreased boot time by about 10 seconds by reducing rda-backlight timeout, cleaned up distributions.sh into organized functions</li>
   <li>September 23rd 2022 - V1.19 - Add OPi.GPIO library (supports devices such as the Waveshare e-paper display (thanks Michael, <a href="https://github.com/Farnsworth9qc/OPi.GPIO">OPi.GPIO fork), add orangepi user to gpio group, general cleanup/removal of script portions related to other platforms than RDA</li>
   <li>September 22nd 2022 - V1.18 - Enable CONFIG_SND_USB to allow for USB soundcard use</li>

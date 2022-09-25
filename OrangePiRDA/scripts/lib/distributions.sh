@@ -191,10 +191,8 @@ do_conffile() {
 		cp -rf ${EXTER}/chips/RDA/sbin/* ${DEST}/usr/local/sbin
 		cp -rf ${EXTER}/common/rootfs/100-fs-warning ${DEST}/etc/update-motd.d/
 		cp -rf ${EXTER}/chips/RDA/CameraTest ${DEST}/home/orangepi
-		cp -rf ${EXTER}/chips/RDA/2G ${DEST}/home/orangepi
 		cp -rf ${EXTER}/chips/RDA/sbin/test_playback.sh ${DEST}/home/orangepi
 		cp -rf ${EXTER}/chips/RDA/CameraTest ${DEST}/root
-		cp -rf ${EXTER}/chips/RDA/2G ${DEST}/root
 		cp -rf ${EXTER}/chips/RDA/sbin/test_playback.sh ${DEST}/root
 	else
 		echo -e "\e[1;31m Pls select correct platform \e[0m"
@@ -234,6 +232,7 @@ RemainAfterExit=yes
 WantedBy=ssh.service
 EOF
 	do_chroot systemctl enable ssh-keygen
+	do_chroot /usr/bin/ssh-keygen -A
 }
 
 add_rclocal_service() {
@@ -684,11 +683,21 @@ EOF
 	make -C $LINUX ARCH=${ARCH} CROSS_COMPILE=$TOOLS headers_install INSTALL_HDR_PATH="$DEST/usr/local"
 	#cp $EXTER/firmware $DEST/lib/ -rf
 
+	# Replace wireless driver
 	curl -k -L -o "$DEST/lib/modules/3.10.62-rel5.0.2+/kernel/drivers/net/wireless/rdaw80211/rdawlan/rdawfmac.ko" http://alt.pbeirne.com:3000/patb/i96/raw/master/rdawfmac.ko
 	mkdir -p "$DEST/data/misc/wifi"
 	mkdir -p "$DEST/data/misc/bluetooth/"
+
 	#rm -rf $BUILD/${DISTRO}_${IMAGETYPE}_rootfs
 	#cp -rfa $DEST $BUILD/${DISTRO}_${IMAGETYPE}_rootfs
+
+	# Copy WLANMAC and BTMAC from external if they exist (convenience for building so it always has the same addresses)
+	if [ -e "${EXTER}/WLANMAC" ]; then
+		cp "${EXTER}/WLANMAC" "$DEST/data/misc/wifi/WLANMAC"
+	fi
+	if [ -e "${EXTER}/BTMAC" ]; then
+		cp "${EXTER}/BTMAC" "$DEST/data/misc/bluetooth/BTMAC"
+	fi
 }
 
 desktop_setup() {

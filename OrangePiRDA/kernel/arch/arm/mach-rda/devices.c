@@ -392,7 +392,7 @@ static struct rda_mmc_device_data rda_mmc0_data[] = {
 		.f_min = 1000000,
 		.f_max = _TGT_AP_SDMMC1_MAX_FREQ,
 		.mclk_adj = _TGT_AP_SDMMC1_MCLK_ADJ,
-		.ocr_avail = MMC_VDD_32_33 | MMC_VDD_33_34,
+		.ocr_avail = MMC_VDD_165_195 | MMC_VDD_32_33 | MMC_VDD_33_34,
 
 		.caps = MMC_CAP_4_BIT_DATA | MMC_CAP_UHS_DDR50 | MMC_CAP_SD_HIGHSPEED | MMC_CAP_ERASE | MMC_CAP_1_8V_DDR,
 
@@ -437,16 +437,16 @@ static struct resource rda_mmc1_resource[] = {
 
 static struct rda_mmc_device_data rda_mmc1_data[] = {
 	{
-		.f_min = 1000000,
+		.f_min = 10000000,
 		.f_max = _TGT_AP_SDMMC2_MAX_FREQ,
 		.mclk_adj = _TGT_AP_SDMMC2_MCLK_ADJ,
-		.ocr_avail = MMC_VDD_32_33 | MMC_VDD_33_34,
+		.ocr_avail = MMC_VDD_165_195 | MMC_VDD_32_33 | MMC_VDD_33_34,
 		.caps = MMC_CAP_4_BIT_DATA | MMC_CAP_SDIO_IRQ,
 		.eirq_enable = 1,
 		.eirq_gpio = GPIO_WIFI, // WF_INTN
 		.debounce = -1,			// not care now
 		.eirq_sense = IRQF_TRIGGER_LOW | IRQF_NO_SUSPEND,
-		.sys_suspend = 1,
+		.sys_suspend = 0,
 		.pm_caps = MMC_PM_KEEP_POWER,
 		.dev_label = "rda_wlan_irq",
 #ifdef _TGT_AP_SDMMC2_MCLK_INV
