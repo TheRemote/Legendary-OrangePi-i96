@@ -5726,7 +5726,7 @@ static s32 notify_connect_status(struct wland_if *ifp,
 		ifp->vif->mode);
 
 	if (!check_vif_up(ifp->vif)) {
-		WLAND_ERR("Vif Not SetUp(event:%d,reason:%d)\n", e->event_code,
+		WLAND_DBG(CFG80211, TRACE, "Device is not ready - vif not set up (event:%d,reason:%d)\n", e->event_code,
 			e->reason);
 		err = -EINVAL;
 		return err;
@@ -6360,7 +6360,8 @@ s32 wland_cfg80211_up(struct net_device * ndev)
 	set_bit(VIF_STATUS_READY, &ifp->vif->sme_state);
 
 	if (cfg->dongle_up) {
-		WLAND_ERR("dongle up\n");
+		WLAND_DBG(CFG80211, TRACE, "dongle is already up and received another up request\n");
+		//WLAND_ERR("dongle up\n");
 		goto up_exit;
 	}
 

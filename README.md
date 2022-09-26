@@ -53,6 +53,7 @@ Ubuntu is not building correctly yet.<br>
 <br>
 <h2>Version History</h2>
 <ol>
+  <li>September 25th 2022 - V1.23 - Fixed many dmesg errors related to WiFi, rda-mmc, and others</li>
   <li>September 25th 2022 - V1.22 - Ported wireless fixes to source instead of binary driver, more distributions.sh organization into functions, add packages wireless-tools/lshw/haveged/libnl-3-dev/libnl-genl-3-dev, use rootfs caching more efficiently for rebuilding</li>
   <li>September 24th 2022 - V1.21 - Fixed "unrecognized mount option 'hidepid=invisible' or missing value" error</li>
   <li>September 24th 2022 - V1.20 - Fixed SD card driver to correctly support high-speed mode, fixed TRIM support, decreased boot time by about 10 seconds by reducing rda-backlight timeout, cleaned up distributions.sh into organized functions</li>

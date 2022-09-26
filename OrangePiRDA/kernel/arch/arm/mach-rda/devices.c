@@ -437,7 +437,7 @@ static struct resource rda_mmc1_resource[] = {
 
 static struct rda_mmc_device_data rda_mmc1_data[] = {
 	{
-		.f_min = 10000000,
+		.f_min = 20000000,
 		.f_max = _TGT_AP_SDMMC2_MAX_FREQ,
 		.mclk_adj = _TGT_AP_SDMMC2_MCLK_ADJ,
 		.ocr_avail = MMC_VDD_165_195 | MMC_VDD_32_33 | MMC_VDD_33_34,

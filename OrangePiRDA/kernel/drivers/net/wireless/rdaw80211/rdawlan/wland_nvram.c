@@ -26,7 +26,7 @@
 #include <plat/md_sys.h>
 #endif
 
-#define WIFI_NVRAM_FILE_NAME    "/data/misc/wifi/WLANMAC"
+#define WIFI_NVRAM_FILE_NAME "/data/misc/wifi/WLANMAC"
 
 static int nvram_read(char *filename, char *buf, ssize_t len, int offset)
 {
@@ -68,7 +68,7 @@ static int nvram_read(char *filename, char *buf, ssize_t len, int offset)
 	return retLen;
 }
 
-static int nvram_write(char *filename, char *buf, ssize_t len, int offset)
+static int nvram_write(const char *filename, char *buf, ssize_t len, int offset)
 {
 	struct file *fd;
 	int retLen = -1;
@@ -126,7 +126,7 @@ int wlan_read_mac_from_nvram(char *buf)
 	return nvram_read(WIFI_NVRAM_FILE_NAME, buf, 6, 0);
 }
 
-int wlan_write_mac_to_nvram(const char *buf)
+int wlan_write_mac_to_nvram(char *buf)
 {
 	return nvram_write(WIFI_NVRAM_FILE_NAME, buf, 6, 0);
 }

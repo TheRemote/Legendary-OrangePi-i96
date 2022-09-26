@@ -209,7 +209,7 @@ static int hal_wait_cmd_done(struct rda_mmc_host *host,
 	while (time_before(jiffies, timeout) && !hal_cmd_done(host));
 
 	if (!hal_cmd_done(host)) {
-		dev_err(mmc_dev(host->mmc), "cmd %d timeout\n", cmd->opcode);
+		dev_info(mmc_dev(host->mmc), "cmd %d timeout\n", cmd->opcode);
 		return -ETIMEDOUT;
 	}
 
@@ -227,7 +227,7 @@ static int hal_wait_cmd_resp(struct rda_mmc_host *host)
 	HAL_SDMMC_OP_STATUS_T status = hal_get_op_status(host);
 
 	if (status.fields.noResponseReceived) {
-		dev_err(mmc_dev(host->mmc), "rsp noResponseReceived\n");
+		rda_dbg_mmc("rsp noResponseReceived\n");
 		return -EIO;
 	}
 
@@ -661,7 +661,7 @@ static int do_command(struct mmc_host *mmc,
 		result = (host->present == 0) ? -ENOMEDIUM : result;
 		cmd->error = result;
 
-		dev_err(mmc_dev(host->mmc), "cmd %d, wait cmd fail, ret = %d\n",
+		rda_dbg_mmc("cmd %d, wait cmd fail, ret = %d\n",
 				cmd->opcode, result);
 
 		return result;
@@ -673,8 +673,7 @@ static int do_command(struct mmc_host *mmc,
 			result = (host->present == 0) ? -ENOMEDIUM : result;
 			cmd->error = result;
 
-			dev_err(mmc_dev(host->mmc),
-				"cmd %d, wait resp fail, ifc = %d, ret = %d\n",
+			rda_dbg_mmc("cmd %d, wait resp fail, ifc = %d, ret = %d\n",
 				cmd->opcode, (int)host->data_transfer.channel, result);
 
 			return result;
@@ -1018,8 +1017,7 @@ static void rda_mmc_request(struct mmc_host *mmc, struct mmc_request *mrq)
 	host->mrq = NULL;
 
 	if (ret) {
-		dev_err(mmc_dev(host->mmc),
-			"rda_mmc_request fail, ret = %d\n", ret);
+		rda_dbg_mmc("rda_mmc_request fail, ret = %d\n", ret);
 		mmc_request_done(mmc, mrq);
 		return;
 	}
