@@ -651,18 +651,6 @@ EOF
 	mkdir -p "$DEST/data/misc/wifi"
 	mkdir -p "$DEST/data/misc/bluetooth/"
 
-	# Copy WLANMAC and BTMAC from external if they exist (convenience for building so it always has the same addresses)
-	if [ -e "${EXTER}/WLANMAC" ]; then
-		cp "${EXTER}/WLANMAC" "$DEST/data/misc/wifi/WLANMAC"
-	fi
-	if [ -e "${EXTER}/BTMAC" ]; then
-		cp "${EXTER}/BTMAC" "$DEST/data/misc/bluetooth/BTMAC"
-	fi
-	# Copy preconfigured network file if it exists
-	if [ -e "${EXTER}/interfaces" ]; then
-		cp "${EXTER}/interfaces" "$DEST/etc/network/interfaces"
-	fi
-
 	cd $BUILD
 	tar czf ${DISTRO}_server_rootfs.tar.gz rootfs
 	cd -
@@ -680,6 +668,22 @@ server_setup() {
 	# Bring back folders
 	mkdir -p "$DEST/lib"
 	mkdir -p "$DEST/usr"
+	mkdir -p "$DEST/etc/network/interfaces.d"
+
+	# Copy WLANMAC and BTMAC from external if they exist (convenience for building so it always has the same addresses)
+	if [ -e "${EXTER}/presets/WLANMAC" ]; then
+		cp "${EXTER}/presets/WLANMAC" "$DEST/data/misc/wifi/WLANMAC"
+	fi
+	if [ -e "${EXTER}/presets/BTMAC" ]; then
+		cp "${EXTER}/presets/BTMAC" "$DEST/data/misc/bluetooth/BTMAC"
+	fi
+	# Copy preconfigured network and crda file if they exist
+	if [ -e "${EXTER}/presets/interfaces" ]; then
+		cp "${EXTER}/presets/interfaces" "$DEST/etc/network/interfaces"
+	fi
+	if [ -e "${EXTER}/presets/crda" ]; then
+		cp "${EXTER}/presets/interfaces" "$DEST/etc/default/crda"
+	fi
 
 	if [ ! -d $DEST/lib/modules ]; then
 		mkdir "$DEST/lib/modules"
