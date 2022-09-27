@@ -232,7 +232,10 @@ RemainAfterExit=yes
 WantedBy=ssh.service
 EOF
 	do_chroot systemctl enable ssh-keygen
-	#do_chroot /usr/bin/ssh-keygen -A
+}
+
+pregenerate_ssh_keys() {
+	do_chroot /usr/bin/ssh-keygen -A
 }
 
 set_locale() {
@@ -264,6 +267,9 @@ WantedBy=multi-user.target
 EOF
 	cat >"$DEST/etc/rc.local" <<EOF
 #!/bin/sh
+
+# Set wireless txpower
+iwconfig wlan0 txpower 30
 
 # Trim drives once on startup
 fstrim -v /
@@ -701,6 +707,10 @@ server_setup() {
 	# Preset locales if locales file is present
 	if [ -e "${EXTER}/presets/locales" ]; then
 		set_locale
+	fi
+	# Pregenerate SSH keys if present
+	if [ -e "${EXTER}/presets/ssh" ]; then
+		pregenerate_ssh_keys
 	fi
 
 	if [ ! -d $DEST/lib/modules ]; then

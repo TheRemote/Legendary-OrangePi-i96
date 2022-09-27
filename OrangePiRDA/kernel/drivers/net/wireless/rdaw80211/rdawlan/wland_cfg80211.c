@@ -163,7 +163,7 @@ static const struct ieee80211_regdomain wland_regdom = {
 		/*
 		* IEEE 802.11b/g, channels 1..11
 		*/
-		REG_RULE(2412 - 10, 2472 + 10, 40, 6, 20, 0),
+		REG_RULE(2412 - 10, 2472 + 10, 40, 10, 30, 0),
 		/*
 		* IEEE 802.11 channel 14 - Only JP enables this and for 802.11b only
 		*/
@@ -1600,9 +1600,7 @@ static s32 cfg80211_disconnect(struct wiphy *wiphy, struct net_device *ndev,
 }
 
 static s32 cfg80211_set_tx_power(struct wiphy *wiphy,
-#if    LINUX_VERSION_CODE >= KERNEL_VERSION(3, 10, 0)
 	struct wireless_dev *wdev,
-#endif				/*LINUX_VERSION_CODE >= KERNEL_VERSION(3, 10, 0) */
 	enum nl80211_tx_power_setting type, s32 mbm)
 {
 	struct wland_cfg80211_info *cfg = wiphy_to_cfg(wiphy);
@@ -1611,17 +1609,15 @@ static s32 cfg80211_set_tx_power(struct wiphy *wiphy,
 	u16 txpwrmw;
 	s32 err = 0, disable = 0;
 
-#if    LINUX_VERSION_CODE >= KERNEL_VERSION(3, 10, 0)
 	s32 dbm = MBM_TO_DBM(mbm);
-#else
-	s32 dbm = mbm;
-#endif /*LINUX_VERSION_CODE >= KERNEL_VERSION(3, 10, 0) */
+	WLAND_DBG(CFG80211, INFO, "dbm:%d\n", dbm);
 
 	WLAND_DBG(CFG80211, TRACE, "Enter\n");
 
 	if (!check_vif_up(ifp->vif))
 		return -EIO;
 
+	WLAND_DBG(CFG80211, INFO, "type:%d\n", type);
 	switch (type) {
 	case NL80211_TX_POWER_AUTOMATIC:
 		break;
@@ -1649,19 +1645,25 @@ static s32 cfg80211_set_tx_power(struct wiphy *wiphy,
 		WLAND_ERR("SET_RADIO error (%d)\n", err);
 #endif
 
-	if (dbm > 0xFFFF)
-		txpwrmw = 0xFFFF;
-	else
-		txpwrmw = (u16) dbm;
+	if (dbm > 30)
+		dbm = 30;
+	if (dbm < 10)
+		dbm = 10;
 
+	txpwrmw = (u16) dbm;
+
+	WLAND_DBG(CFG80211, DEBUG, "new tx_power:%d\n", dbm);
+	WLAND_DBG(CFG80211, DEBUG, "old tx_power:%d\n", cfg->conf->tx_power);
 	cfg->conf->tx_power = dbm;
 
+	WLAND_DBG(CFG80211, DEBUG, "txpwrmw:%d\n", txpwrmw);
 	dbm = wland_mw_to_qdbm(txpwrmw);
+	WLAND_DBG(CFG80211, DEBUG, "new dbm:%d\n", dbm);
 
 	err = wland_fil_iovar_data_set(ifp, "qtxpower", &dbm, sizeof(dbm));
 
 done:
-	WLAND_DBG(CFG80211, INFO, "Done(qtxpower:%d, mbm:%d)\n", err, mbm);
+	WLAND_DBG(CFG80211, INFO, "Done(err:%d, tx_power:%d)\n", err, cfg->conf->tx_power);
 	return err;
 }
 
@@ -1685,11 +1687,19 @@ static s32 cfg80211_get_tx_power(struct wiphy *wiphy,
 		goto done;
 	}
 
+	WLAND_DBG(CFG80211, DEBUG, "txpwrdbm:%d\n", txpwrdbm);
+	WLAND_DBG(CFG80211, DEBUG, "cfg tx_power:%d\n", cfg->conf->tx_power);
 	result = (u8) (txpwrdbm & ~TXPWR_OVERRIDE);
+	WLAND_DBG(CFG80211, DEBUG, "result:%d\n", result);
 	*dbm = (s32) wland_qdbm_to_mw(result);
-
+	if (cfg->conf->tx_power > 30)
+		cfg->conf->tx_power = 30;
+	if (cfg->conf->tx_power < 10)
+		cfg->conf->tx_power = 10;
+	*dbm = cfg->conf->tx_power;
+	WLAND_DBG(CFG80211, DEBUG, "dbm:%d\n", result);
 done:
-	WLAND_DBG(CFG80211, INFO, "Done(dbm:%d)\n", *dbm);
+	WLAND_DBG(CFG80211, INFO, "Done(tx_power:%d)\n", cfg->conf->tx_power);
 	return err;
 }
 
