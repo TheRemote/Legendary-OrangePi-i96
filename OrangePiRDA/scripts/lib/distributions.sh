@@ -235,6 +235,20 @@ EOF
 	#do_chroot /usr/bin/ssh-keygen -A
 }
 
+set_locale() {
+	cat >"$DEST/type-phase" <<EOF
+#!/bin/bash
+echo "locales locales/default_environment_locale select en_US.UTF-8" | debconf-set-selections
+echo "locales locales/locales_to_be_generated multiselect en_US.UTF-8 UTF-8" | debconf-set-selections
+rm -f "/etc/locale.gen"
+dpkg-reconfigure --frontend noninteractive locales
+EOF
+	chmod +x "$DEST/type-phase"
+	do_chroot /type-phase
+	sync
+	rm -f "$DEST/type-phase"
+}
+
 add_rclocal_service() {
 	echo "Adding rc.local service..."
 	cat >"$DEST/lib/systemd/system/rc-local.service" <<EOF
@@ -602,7 +616,7 @@ prepare_rootfs_server() {
 export DEBIAN_FRONTEND=noninteractive
 
 apt-get -y update
-apt-get -y install curl locales sudo imagemagick haveged lshw libnl-3-dev libnl-genl-3-dev libv4l-dev cmake bluez wireless-tools bluez-tools apt-transport-https man-db subversion python3-pip python3-setuptools gpg net-tools g++ libjpeg-dev usbutils dosfstools curl xz-utils iw rfkill ifupdown wpasupplicant openssh-server rsync u-boot-tools vim parted git autoconf gcc libtool ntp libsysfs-dev pkg-config libdrm-dev xutils-dev alsa-utils acl crda cpufrequtils network-manager
+apt-get -y install curl locales sudo imagemagick haveged lshw libnl-3-dev libnl-genl-3-dev libv4l-dev cmake bluez wireless-tools bluez-tools apt-transport-https man-db subversion python3-pip python3-setuptools gpg net-tools g++ libjpeg-dev usbutils dosfstools curl xz-utils iw rfkill ifupdown wpasupplicant openssh-server rsync u-boot-tools vim parted git autoconf gcc libtool ntp libsysfs-dev pkg-config libdrm-dev xutils-dev alsa-utils acl crda cpufrequtils network-manager trace-cmd
 
 # Install Python spidev library
 pip3 install spidev
@@ -683,6 +697,10 @@ server_setup() {
 	fi
 	if [ -e "${EXTER}/presets/crda" ]; then
 		cp "${EXTER}/presets/interfaces" "$DEST/etc/default/crda"
+	fi
+	# Preset locales if locales file is present
+	if [ -e "${EXTER}/presets/locales" ]; then
+		set_locale
 	fi
 
 	if [ ! -d $DEST/lib/modules ]; then

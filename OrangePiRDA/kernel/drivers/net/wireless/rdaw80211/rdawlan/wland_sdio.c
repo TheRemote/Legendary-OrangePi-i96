@@ -353,7 +353,7 @@ static int wland_sdio_txpkt(struct wland_sdio *bus, struct sk_buff *pkt)
 	*(__le16 *) frame = cpu_to_le16(len);
 	len = real_len;
 
-	WLAND_DBG(SDIO, DEBUG, "pkt->len=%x, frame:%x, addr(pkt->data)=%p\n", len,
+	WLAND_DBG(SDIO, TRACE, "pkt->len=%x, frame:%x, addr(pkt->data)=%p\n", len,
 		*(__le16 *) frame, pkt->data);
 
 	if (len & (ALIGNMENT - 1))
@@ -764,7 +764,7 @@ static int wland_sdio_process_rxframes(struct wland_sdio *bus)
 		 */
 		size = skb->len;
 		rx_len = (u16) (buf[0] | ((buf[1] & 0x0F) << 8));
-		WLAND_DBG(SDIO, DEBUG, "size=%d, rx_len=%d, addr:%x\n", size, rx_len, (unsigned int)buf);
+		WLAND_DBG(SDIO, TRACE, "size=%d, rx_len=%d, addr:%x\n", size, rx_len, (unsigned int)buf);
 		if (rx_len > size) {
 			WLAND_ERR("SDIO read payload_len invalid! \n");
 			wland_pkt_buf_free_skb(skb);
@@ -1084,7 +1084,7 @@ static int wland_sdio_bus_txctl(struct device *dev, u8 * msg, uint msglen)
 		dhd_os_wait_for_event(bus, &bus->ctrl_frame_stat);
 
 	if (!bus->ctrl_frame_stat && bus->ctrl_frame_send_success) {
-		WLAND_DBG(SDIO, DEBUG,
+		WLAND_DBG(SDIO, TRACE,
 			"ctrl_frame_stat == false, send success\n");
 		ret = 0;
 	} else if(!bus->ctrl_frame_stat && !bus->ctrl_frame_send_success){

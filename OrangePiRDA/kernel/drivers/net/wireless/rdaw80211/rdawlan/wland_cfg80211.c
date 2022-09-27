@@ -160,25 +160,23 @@ static const struct ieee80211_regdomain wland_regdom = {
 	.n_reg_rules = 4,
 	.alpha2 = "99",
 	.reg_rules = {
-			/*
-			 * IEEE 802.11b/g, channels 1..11
-			 */
-			REG_RULE(2412 - 10, 2472 + 10, 40, 6, 20, 0),
-			/*
-			 * If any
-			 */
-			/*
-			 * IEEE 802.11 channel 14 - Only JP enables this and for 802.11b only
-			 */
-			REG_RULE(2484 - 10, 2484 + 10, 20, 6, 20, 0),
-			/*
-			 * IEEE 802.11a, channel 36..64
-			 */
-			REG_RULE(5150 - 10, 5350 + 10, 40, 6, 20, 0),
-			/*
-			 * IEEE 802.11a, channel 100..165
-			 */
-		REG_RULE(5470 - 10, 5850 + 10, 40, 6, 20, 0),}
+		/*
+		* IEEE 802.11b/g, channels 1..11
+		*/
+		REG_RULE(2412 - 10, 2472 + 10, 40, 6, 20, 0),
+		/*
+		* IEEE 802.11 channel 14 - Only JP enables this and for 802.11b only
+		*/
+		REG_RULE(2484 - 10, 2484 + 10, 20, 6, 20, 0),
+		/*
+		* IEEE 802.11a, channel 36..64
+		*/
+		REG_RULE(5150 - 10, 5350 + 10, 40, 6, 20, 0),
+		/*
+		* IEEE 802.11a, channel 100..165
+		*/
+		REG_RULE(5470 - 10, 5850 + 10, 40, 6, 20, 0),
+	}
 };
 
 static const u32 __wl_cipher_suites[] = {
@@ -1663,7 +1661,7 @@ static s32 cfg80211_set_tx_power(struct wiphy *wiphy,
 	err = wland_fil_iovar_data_set(ifp, "qtxpower", &dbm, sizeof(dbm));
 
 done:
-	WLAND_DBG(CFG80211, TRACE, "Done(qtxpower:%d)\n", err);
+	WLAND_DBG(CFG80211, INFO, "Done(qtxpower:%d, mbm:%d)\n", err, mbm);
 	return err;
 }
 
@@ -5224,7 +5222,6 @@ static const struct ieee80211_txrx_stypes
 		}
 };
 
-#if LINUX_VERSION_CODE >= KERNEL_VERSION(3, 10, 0)
 void cfg80211_reg_notifier(struct wiphy *wiphy,
 	struct regulatory_request *request)
 {
@@ -5246,11 +5243,11 @@ void cfg80211_reg_notifier(struct wiphy *wiphy,
 	/*
 	 * We support only REGDOM_SET_BY_USER as of now
 	 */
-	//if (request->initiator != NL80211_REGDOM_SET_BY_USER) {
-	//	WLAND_ERR("reg_notifier for intiator:%d not supported \n",
-	//		request->initiator);
-	//	return;
-	//}
+	if (request->initiator != NL80211_REGDOM_SET_BY_USER) {
+		WLAND_ERR("reg_notifier for intiator:%d not supported \n",
+			request->initiator);
+		return;
+	}
 
 	if (request->alpha2[0] == '0' && request->alpha2[1] == '0') {
 		/*
@@ -5269,65 +5266,6 @@ void cfg80211_reg_notifier(struct wiphy *wiphy,
 		cspec.country_abbrev, cspec.rev);
 	return;
 }
-#else
-int cfg80211_reg_notifier(struct wiphy *wiphy,
-	struct regulatory_request *request)
-{
-	struct wland_cfg80211_info *cfg =
-		(struct wland_cfg80211_info *) wiphy_priv(wiphy);
-	struct wland_country cspec = { {
-		0}, 0, {
-		0}
-	};
-	int err = 0;
-
-	if (!request || !cfg) {
-		WLAND_ERR("Invalid arg\n");
-		return err;
-	}
-
-	WLAND_DBG(CFG80211, TRACE, "ccode: %c%c Initiator: %d\n",
-		request->alpha2[0], request->alpha2[1], request->initiator);
-
-	/*
-	 * We support only REGDOM_SET_BY_USER as of now
-	 */
-	//if (request->initiator != NL80211_REGDOM_SET_BY_USER) {
-	//	WLAND_ERR("reg_notifier for intiator:%d not supported \n",
-	//		request->initiator);
-	//	return err;
-	//}
-
-	if (request->alpha2[0] == '0' && request->alpha2[1] == '0') {
-		/*
-		 * world domain
-		 */
-		WLAND_ERR("World domain. Setting XY/4 \n");
-		strncpy(cspec.country_abbrev, "XY", strlen("XY"));
-		cspec.rev = 4;
-	} else {
-		memcpy(cspec.country_abbrev, request->alpha2, 2);
-		cspec.country_abbrev[3] = '\0';
-		cspec.rev = -1;	/* Unspecified */
-	}
-
-#if 0
-	if ((ret = wldev_iovar_setbuf(cfg->wdev->netdev, "country",
-				(char *) &cspec, sizeof(cspec), cfg->ioctl_buf,
-				WLC_IOCTL_SMLEN, NULL)) < 0) {
-		WLAND_ERR("set country Failed :%d\n", ret);
-		goto exit;
-	}
-
-	if ((ret = wland_update_wiphybands(cfg, false)) < 0)
-		WLAND_ERR("wland_update_wiphybands failed\n");
-exit:
-#endif
-	WLAND_DBG(CFG80211, TRACE, "set country '%s/%d' done\n",
-		cspec.country_abbrev, cspec.rev);
-	return err;
-}
-#endif
 
 static struct wiphy *wland_setup_wiphy(struct device *phydev)
 {
@@ -5461,9 +5399,9 @@ static struct wiphy *wland_setup_wiphy(struct device *phydev)
 	//has its own custom regulatory domain and cannot identify the
 	//ISO /IEC 3166 alpha2 it belongs to. When this is enabled
 	//we will disregard the first regulatory hint (when the initiator is %REGDOM_SET_BY_CORE).
-	//wiphy->flags |= WIPHY_FLAG_CUSTOM_REGULATORY;
+	wiphy->flags |= WIPHY_FLAG_CUSTOM_REGULATORY;
 
-	//WLAND_DBG(CFG80211, TRACE, "Registering custom regulatory.\n");
+	WLAND_DBG(CFG80211, INFO, "Registering custom regulatory.\n");
 
 	/*
 	 *the driver's regulatory notification callback,
@@ -5472,7 +5410,7 @@ static struct wiphy *wland_setup_wiphy(struct device *phydev)
 	 */
 	wiphy->reg_notifier = cfg80211_reg_notifier;
 
-	//wiphy_apply_custom_regulatory(wiphy, &wland_regdom);
+	wiphy_apply_custom_regulatory(wiphy, &wland_regdom);
 
 	err = wiphy_register(wiphy);
 	if (unlikely(err < 0)) {

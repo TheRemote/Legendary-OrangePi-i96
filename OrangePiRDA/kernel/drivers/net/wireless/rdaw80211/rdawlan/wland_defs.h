@@ -25,7 +25,7 @@
  ****************************************************************************/
 
 /* init_scan support */
-#define WLAND_INIT_SCAN_SUPPORT
+//#define WLAND_INIT_SCAN_SUPPORT
 
 /* Driver Version Sync With Source Server */
 #define WLAND_VER_MAJ                           5
@@ -195,6 +195,7 @@ enum WLAND_CHIP_VERSION {
 
 /* define support cfg80211 or wext mode */
 #define WLAND_CFG80211_SUPPORT
+//#define WLAND_WEXT_SUPPORT
 
 /* define support wapi sec mode */
 //#define WLAND_WAPI_SUPPORT

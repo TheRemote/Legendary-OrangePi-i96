@@ -1,0 +1,9 @@
+#!/bin/sh
+
+BOARD=`hostname`
+echo "\033[31m\033[1m***********************************************"
+echo "Welcome to ${BOARD}:"
+echo "At first! please configure your ${BOARD}:"
+echo "sudo orangepi-config"
+echo "Have good trip on ${BOARD}!" 
+echo "***********************************************\033[22m\033[37m"

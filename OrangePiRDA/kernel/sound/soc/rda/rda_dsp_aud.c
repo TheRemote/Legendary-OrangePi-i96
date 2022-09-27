@@ -286,7 +286,7 @@ static int rda_gpioc_platform_probe(struct platform_device *pdev)
 	led_trigger_register_simple(LED_CAM_FLASH, &rda_sensor_led);
 	mdelay(5);
 	led_trigger_event(rda_sensor_led, LED_HALF);
-	printk(" rda_gpioc_platform_probe22222222222222 \r\n  ");
+	printk(KERN_INFO "rda_gpioc_platform_probe 2\n");
 	#endif
 
 	return ret;
