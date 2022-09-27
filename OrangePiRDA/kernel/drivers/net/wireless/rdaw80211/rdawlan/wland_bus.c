@@ -160,7 +160,8 @@ int wland_bus_start(struct device *dev)
 	}
 #elif defined(WLAND_WEXT_SUPPORT)
 	/* Attach and link in the iw */
-	if (iwext_attach(drvr, bus_if->dev) != 0) {
+	ret = iwext_attach(drvr, bus_if->dev);
+	if (ret != 0) {
 		WLAND_ERR("iwext_attach failed\n");
 		ret = -ENOMEM;
 		goto out;

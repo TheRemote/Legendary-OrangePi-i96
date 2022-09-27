@@ -616,7 +616,7 @@ prepare_rootfs_server() {
 export DEBIAN_FRONTEND=noninteractive
 
 apt-get -y update
-apt-get -y install curl locales sudo imagemagick haveged lshw libnl-3-dev libnl-genl-3-dev libv4l-dev cmake bluez wireless-tools bluez-tools apt-transport-https man-db subversion python3-pip python3-setuptools gpg net-tools g++ libjpeg-dev usbutils dosfstools curl xz-utils iw rfkill ifupdown wpasupplicant openssh-server rsync u-boot-tools vim parted git autoconf gcc libtool ntp libsysfs-dev pkg-config libdrm-dev xutils-dev alsa-utils acl crda cpufrequtils network-manager trace-cmd
+apt-get -y install curl locales sudo imagemagick haveged lshw libnl-3-dev libnl-genl-3-dev libv4l-dev cmake bluez wireless-tools bluez-tools apt-transport-https man-db subversion python3-pip python3-setuptools gpg net-tools g++ libjpeg-dev usbutils dosfstools curl xz-utils iw rfkill ifupdown wpasupplicant openssh-server rsync u-boot-tools vim parted git autoconf gcc libtool ntp libsysfs-dev pkg-config libdrm-dev xutils-dev alsa-utils acl crda cpufrequtils network-manager trace-cmd can-utils
 
 # Install Python spidev library
 pip3 install spidev

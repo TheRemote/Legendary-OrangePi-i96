@@ -158,7 +158,7 @@ static struct ieee80211_supported_band __wl_band_5ghz_a = {
  */
 static const struct ieee80211_regdomain wland_regdom = {
 	.n_reg_rules = 4,
-	.alpha2 = "99",
+	.alpha2 = "00",
 	.reg_rules = {
 		/*
 		* IEEE 802.11b/g, channels 1..11
@@ -221,7 +221,7 @@ struct parsed_vndr_ies {
 /* Smallest mW value that will round up to the first table entry, QDBM_OFFSET.
  * Value is ( mW(QDBM_OFFSET - 1) + mW(QDBM_OFFSET) ) / 2
  */
-#define QDBM_TABLE_LOW_BOUND 6493	/* Low bound */
+#define QDBM_TABLE_LOW_BOUND 26607	/* Low bound */
 
 /* Largest mW value that will round down to the last table entry,
  * QDBM_OFFSET + QDBM_TABLE_LEN-1.
@@ -1666,9 +1666,7 @@ done:
 }
 
 static s32 cfg80211_get_tx_power(struct wiphy *wiphy,
-#if    LINUX_VERSION_CODE >= KERNEL_VERSION(3, 10, 0)
 	struct wireless_dev *wdev,
-#endif				/* LINUX_VERSION_CODE >= KERNEL_VERSION(3, 10, 0) */
 	s32 * dbm)
 {
 	struct wland_cfg80211_info *cfg = wiphy_to_cfg(wiphy);
@@ -1691,7 +1689,7 @@ static s32 cfg80211_get_tx_power(struct wiphy *wiphy,
 	*dbm = (s32) wland_qdbm_to_mw(result);
 
 done:
-	WLAND_DBG(CFG80211, TRACE, "Done(dbm:%d)\n", *dbm);
+	WLAND_DBG(CFG80211, INFO, "Done(dbm:%d)\n", *dbm);
 	return err;
 }
 

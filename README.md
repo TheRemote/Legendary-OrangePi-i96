@@ -12,6 +12,7 @@ My blog post that birthed this image is located <a href="https://jamesachambers.
   <li>Adds OPi.GPIO library (able to drive SPI devices such as the Waveshare e-ink display)</li>
   <li>Adds ntp to assist with fixing time on first startup -- use "sudo ntpd -gq" to force a time sync once you've set your correct timezone (sudo dpkg-reconfigure tzdata)</li>
   <li>Adds ability to use the i96 as a HID device (mouse/keyboard emulation)</li>
+  <li>Add CAN module support (MCP251x tested so far)</li>
   <li>Fixed SD card port to support "High Speed" timing mode (can be seen with sudo cat /sys/kernel/debug/mmc0/ios)</li>
   <li>Fixed TRIM support (sudo fstrim -av)</li>
   <li>Fixed notorious WiFi issues caused by missing crda package and no regulatory domain set (see first startup instructions to set REGDOMAIN)</li>
@@ -53,6 +54,7 @@ Ubuntu is not building correctly yet.<br>
 <br>
 <h2>Version History</h2>
 <ol>
+  <li>September 27th 2022 - V1.26 - Add CAN module support for MCP251x (thanks MZA, <a href="https://github.com/MehdiZAABAR/OrangePi-I96-Work/">OrangePi-I96-Work</a>), add can-utils package</li>
   <li>September 26th 2022 - V1.25 - Removed deprecated default ssh options, more WiFi driver cleanup</li>
   <li>September 25th 2022 - V1.24 - Disable some WiFi crda / regulatory overrides hardcoded in drivers (there is now some regulatory activity in dmesg!).  There's more work to do on it but it's definitely better than it was</li>
   <li>September 25th 2022 - V1.23 - Fixed many dmesg errors related to WiFi, rda-mmc, and others</li>
