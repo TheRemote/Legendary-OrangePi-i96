@@ -257,6 +257,7 @@ add_rclocal_service() {
 	cat >"$DEST/lib/systemd/system/rc-local.service" <<EOF
 [Unit]
 Description=rc.local service
+After=network.target
 
 [Service]
 ExecStart=/etc/rc.local
@@ -608,7 +609,6 @@ prepare_rootfs_server() {
 	elif [ "$DISTRO" = "sid" -o "$DISTRO" = "stretch" -o "$DISTRO" = "stable" -o "$DISTRO" = "bullseye" ]; then
 		DEB=debian
 		DEBUSER=orangepi
-		EXTRADEBS=""
 		ADDPPACMD=
 		DISPTOOLCMD=
 	else
@@ -697,20 +697,24 @@ server_setup() {
 	if [ -e "${EXTER}/presets/BTMAC" ]; then
 		cp "${EXTER}/presets/BTMAC" "$DEST/data/misc/bluetooth/BTMAC"
 	fi
-	# Copy preconfigured network and crda file if they exist
+	# Copy preconfigured network/crda/timezone file if they exist
 	if [ -e "${EXTER}/presets/interfaces" ]; then
 		cp "${EXTER}/presets/interfaces" "$DEST/etc/network/interfaces"
 	fi
 	if [ -e "${EXTER}/presets/crda" ]; then
 		cp "${EXTER}/presets/crda" "$DEST/etc/default/crda"
 	fi
+	if [ -e "${EXTER}/presets/timezone" ]; then
+		cp "${EXTER}/presets/timezone" "$DEST/etc/timezone"
+	fi
 	# Preset locales if locales file is present
 	if [ -e "${EXTER}/presets/locales" ]; then
 		set_locale
 	fi
-	# Pregenerate SSH keys if present
-	if [ -e "${EXTER}/presets/ssh" ]; then
-		pregenerate_ssh_keys
+	# Copy SSH keys if present
+	if [ -d "${EXTER}/presets/ssh" ]; then
+		mkdir -p "$DEST/etc/ssh/"
+		cp -r "${EXTER}/presets/ssh" "$DEST/etc/ssh"
 	fi
 
 	if [ ! -d $DEST/lib/modules ]; then

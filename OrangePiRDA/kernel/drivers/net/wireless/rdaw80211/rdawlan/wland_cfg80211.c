@@ -221,7 +221,7 @@ struct parsed_vndr_ies {
 /* Smallest mW value that will round up to the first table entry, QDBM_OFFSET.
  * Value is ( mW(QDBM_OFFSET - 1) + mW(QDBM_OFFSET) ) / 2
  */
-#define QDBM_TABLE_LOW_BOUND 26607	/* Low bound */
+#define QDBM_TABLE_LOW_BOUND 42170	/* Low bound */
 
 /* Largest mW value that will round down to the last table entry,
  * QDBM_OFFSET + QDBM_TABLE_LEN-1.
@@ -1693,6 +1693,8 @@ static s32 cfg80211_get_tx_power(struct wiphy *wiphy,
 	WLAND_DBG(CFG80211, DEBUG, "result:%d\n", result);
 	*dbm = (s32) wland_qdbm_to_mw(result);
 	if (cfg->conf->tx_power > 20)
+		cfg->conf->tx_power = 20;
+	if (cfg->conf->tx_power == 0)
 		cfg->conf->tx_power = 20;
 	if (cfg->conf->tx_power < 6)
 		cfg->conf->tx_power = 6;
