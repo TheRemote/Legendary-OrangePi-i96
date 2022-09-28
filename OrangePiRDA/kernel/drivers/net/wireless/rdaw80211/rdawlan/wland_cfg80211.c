@@ -158,12 +158,12 @@ static struct ieee80211_supported_band __wl_band_5ghz_a = {
  */
 static const struct ieee80211_regdomain wland_regdom = {
 	.n_reg_rules = 4,
-	.alpha2 = "00",
+	.alpha2 = "99",
 	.reg_rules = {
 		/*
 		* IEEE 802.11b/g, channels 1..11
 		*/
-		REG_RULE(2412 - 10, 2472 + 10, 40, 10, 30, 0),
+		REG_RULE(2412 - 10, 2472 + 10, 40, 6, 20, 0),
 		/*
 		* IEEE 802.11 channel 14 - Only JP enables this and for 802.11b only
 		*/
@@ -1645,10 +1645,10 @@ static s32 cfg80211_set_tx_power(struct wiphy *wiphy,
 		WLAND_ERR("SET_RADIO error (%d)\n", err);
 #endif
 
-	if (dbm > 30)
-		dbm = 30;
-	if (dbm < 10)
-		dbm = 10;
+	if (dbm > 20)
+		dbm = 20;
+	if (dbm < 6)
+		dbm = 6;
 
 	txpwrmw = (u16) dbm;
 
@@ -1692,10 +1692,10 @@ static s32 cfg80211_get_tx_power(struct wiphy *wiphy,
 	result = (u8) (txpwrdbm & ~TXPWR_OVERRIDE);
 	WLAND_DBG(CFG80211, DEBUG, "result:%d\n", result);
 	*dbm = (s32) wland_qdbm_to_mw(result);
-	if (cfg->conf->tx_power > 30)
-		cfg->conf->tx_power = 30;
-	if (cfg->conf->tx_power < 10)
-		cfg->conf->tx_power = 10;
+	if (cfg->conf->tx_power > 20)
+		cfg->conf->tx_power = 20;
+	if (cfg->conf->tx_power < 6)
+		cfg->conf->tx_power = 6;
 	*dbm = cfg->conf->tx_power;
 	WLAND_DBG(CFG80211, DEBUG, "dbm:%d\n", result);
 done:

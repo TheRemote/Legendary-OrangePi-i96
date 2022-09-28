@@ -5,7 +5,7 @@ build_rk_image() {
 }
 
 build_rda_image() {
-	VER="v1.27"
+	VER="v1.28"
 	IMAGENAME="Legendary_OrangePi_${BOARD}_${OS}_${DISTRO}_${IMAGETYPE}_${VER}"
 	IMAGE="${BUILD}/images/$IMAGENAME.img"
 

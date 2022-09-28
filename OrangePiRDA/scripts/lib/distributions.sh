@@ -269,7 +269,7 @@ EOF
 #!/bin/sh
 
 # Set wireless txpower
-iwconfig wlan0 txpower 30
+iwconfig wlan0 txpower 20
 
 # Trim drives once on startup
 fstrim -v /
@@ -702,7 +702,7 @@ server_setup() {
 		cp "${EXTER}/presets/interfaces" "$DEST/etc/network/interfaces"
 	fi
 	if [ -e "${EXTER}/presets/crda" ]; then
-		cp "${EXTER}/presets/interfaces" "$DEST/etc/default/crda"
+		cp "${EXTER}/presets/crda" "$DEST/etc/default/crda"
 	fi
 	# Preset locales if locales file is present
 	if [ -e "${EXTER}/presets/locales" ]; then

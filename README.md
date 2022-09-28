@@ -55,7 +55,8 @@ Ubuntu is not building correctly yet.<br>
 
 <h2>Version History</h2>
 <ol>
-  <li>September 27th 2022 - V1.27 - Fixed WiFi txpower driver settings (can be set between 10-30dBm with iwconfig wlan0 txpower 30 or iw dev wlan0 set txpower fixed 3000)</li>
+  <li>September 27th 2022 - V1.28 - Restore some WiFi regulatory settings</li>
+  <li>September 27th 2022 - V1.27 - Fixed WiFi txpower driver settings (can be set between 10-20dBm with iwconfig wlan0 txpower 20 or iw dev wlan0 set txpower fixed 2000)</li>
   <li>September 27th 2022 - V1.26 - Add CAN module support for MCP251x (thanks MZA, <a href="https://github.com/MehdiZAABAR/OrangePi-I96-Work/">OrangePi-I96-Work</a>), add can-utils package</li>
   <li>September 26th 2022 - V1.25 - Removed deprecated default ssh options, more WiFi driver cleanup</li>
   <li>September 25th 2022 - V1.24 - Disable some WiFi crda / regulatory overrides hardcoded in drivers (there is now some regulatory activity in dmesg!).  There's more work to do on it but it's definitely better than it was</li>

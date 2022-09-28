@@ -145,34 +145,7 @@ modules_update() {
 }
 
 uboot_update() {
-
-	case "${PLATFORM}" in
-	"OrangePiH3" | "OrangePiH6" | "OrangePiH6_Linux4.9")
-		boot0=$BUILD/uboot/boot0_sdcard_"${CHIP}".bin
-		uboot=$BUILD/uboot/u-boot-"${CHIP}".bin
-
-		# Clean TF partition
-		dd bs=1K seek=8 count=1015 if=/dev/zero of="$UBOOT_PATH"
-		# Update uboot
-		dd if=$boot0 of=$UBOOT_PATH conv=notrunc bs=1k seek=8
-		dd if=$uboot of=$UBOOT_PATH conv=notrunc bs=1k seek=16400
-		;;
-	"OrangePiH3_mainline" | "OrangePiH6_mainline")
-		dd if=/dev/zero of=$UBOOT_PATH bs=1k seek=8 count=1015
-		uboot=$BUILD/uboot/u-boot-sunxi-with-spl.bin-${BOARD}
-		dd if=$uboot of=$UBOOT_PATH conv=notrunc bs=1k seek=16400
-		;;
-	"OrangePiRK3399")
-		dd if=$BUILD/uboot/idbloader.img of=$UBOOT_PATH seek=64
-		dd if=$BUILD/uboot/uboot.img of=$UBOOT_PATH seek=24576
-		dd if=$BUILD/uboot/trust.img of=$UBOOT_PATH seek=32768
-		;;
-	"OrangePiRDA")
-		dd bs=512 seek=256 if=${BUILD}/uboot/u-boot.rda of=${UBOOT_PATH} && sync
-		;;
-	"*") ;;
-
-	esac
+	dd bs=512 seek=256 if=${BUILD}/uboot/u-boot.rda of=${UBOOT_PATH} && sync
 
 	sync
 	clear
