@@ -76,7 +76,7 @@ prepare_host() {
 		gcc automake make binfmt-support flex \
 		lib32z1 lib32z1-dev qemu-user-static bison \
 		dosfstools libncurses5-dev debootstrap \
-		swig libpython2.7-dev libssl-dev dos2unix
+		swig libpython2.7-dev libssl-dev dos2unix libarchive-tools
 
 	# Prepare toolchains
 	chmod 755 -R $ROOT/toolchain/*

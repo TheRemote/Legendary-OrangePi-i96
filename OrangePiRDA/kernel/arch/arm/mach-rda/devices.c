@@ -280,19 +280,19 @@ static struct platform_device rda_comreg0 = {
 	.num_resources = ARRAY_SIZE(rda_comreg0_resource),
 };
 
-static struct spi_gpio_platform_data spi2_gpio_data = {
-		.sck = 2, // spi pins on the comb
-		.mosi = 3,
-		.miso = 4,
-
-		.num_chipselect = 2, // this is the number of devices (we will only connect the screen, but can be extended for spidev)
-};
-struct platform_device rda_spi2_gpio = {
-		.name = "spi_gpio", // spi driver name
-		.id = 2,			// bus number spi2 available on GPIO header
-		.dev = {
-				.platform_data = &spi2_gpio_data,
-		}};
+//static struct spi_gpio_platform_data spi2_gpio_data = {
+//		.sck = 2, // spi pins on the comb
+//		.mosi = 3,
+//		.miso = 4,
+//
+//		.num_chipselect = 2, // this is the number of devices (we will only connect the screen, but can be extended for spidev)
+//};
+//struct platform_device rda_spi2_gpio = {
+//		.name = "spi_gpio", // spi driver name
+//		.id = 2,			// bus number spi2 available on GPIO header
+//		.dev = {
+//				.platform_data = &spi2_gpio_data,
+//		}};
 static struct resource rda_md_resource[] = {
 	[0] = {
 		.start = RDA_COMREGS_PHYS,
@@ -1559,13 +1559,49 @@ RDA_SPI_PARAMETERS tlv320aic23_spi = {
 	.rxTrigger = RDA_SPI_RX_TRIGGER_4_BYTE,
 	.txTrigger = RDA_SPI_TX_TRIGGER_1_EMPTY,
 };
+RDA_SPI_PARAMETERS rda_spi0_params = {
+	.inputEn = true,
+	.clkDelay = RDA_SPI_HALF_CLK_PERIOD_0,
+	.doDelay = RDA_SPI_HALF_CLK_PERIOD_1,
+	.diDelay = RDA_SPI_HALF_CLK_PERIOD_2,
+	.csDelay = RDA_SPI_HALF_CLK_PERIOD_0,
+	.csPulse = RDA_SPI_HALF_CLK_PERIOD_0,
+	.frameSize = 8,
+	.oeRatio = 0,
+	.rxTrigger = RDA_SPI_RX_TRIGGER_1_BYTE,
+	.txTrigger = RDA_SPI_TX_TRIGGER_1_EMPTY,
+};
+RDA_SPI_PARAMETERS rda_spi1_params = {
+	.inputEn = true,
+	.clkDelay = RDA_SPI_HALF_CLK_PERIOD_0,
+	.doDelay = RDA_SPI_HALF_CLK_PERIOD_1,
+	.diDelay = RDA_SPI_HALF_CLK_PERIOD_2,
+	.csDelay = RDA_SPI_HALF_CLK_PERIOD_0,
+	.csPulse = RDA_SPI_HALF_CLK_PERIOD_0,
+	.frameSize = 8,
+	.oeRatio = 0,
+	.rxTrigger = RDA_SPI_RX_TRIGGER_1_BYTE,
+	.txTrigger = RDA_SPI_TX_TRIGGER_1_EMPTY,
+};
 #ifdef CONFIG_CAN_MCP251X
+RDA_SPI_PARAMETERS mcp251x_spi = {
+	.inputEn = true,
+	.clkDelay = RDA_SPI_HALF_CLK_PERIOD_0,
+	.doDelay = RDA_SPI_HALF_CLK_PERIOD_0,
+	.diDelay = RDA_SPI_HALF_CLK_PERIOD_2,
+	.csDelay = RDA_SPI_HALF_CLK_PERIOD_0,
+	.csPulse = RDA_SPI_HALF_CLK_PERIOD_0,
+	.frameSize = 8,
+	.oeRatio = 0,
+	.rxTrigger = RDA_SPI_RX_TRIGGER_1_BYTE,
+	.txTrigger = RDA_SPI_TX_TRIGGER_1_EMPTY,
+};
 static struct mcp251x_platform_data mcp251x_info = {
         .oscillator_frequency = 16000000,
         .board_specific_setup = NULL,
         .power_enable = NULL,
         .transceiver_enable = NULL,
-	.irq_flags = IRQF_TRIGGER_FALLING,
+		.irq_flags = IRQF_TRIGGER_FALLING,
 };
 #endif
 static struct spi_board_info rda_spi_board_info[] = {
@@ -1588,33 +1624,42 @@ static struct spi_board_info rda_spi_board_info[] = {
 	},
 	{
 		.modalias = "spidev", // driver name
-		.max_speed_hz = 1000000,
+		.max_speed_hz = 20000000,
 		.mode = SPI_MODE_0,
-		.bus_num = 2, // /dev/spidev2.0 using gpio_spi driver
+		.bus_num = 0,
+		.chip_select = 2,
+		.controller_data = (void *) &rda_spi0_params,
+		.platform_data = (void *) &rda_spi0,
+	},
+	{
+		.modalias = "spidev", // driver name
+		.max_speed_hz = 20000000,
+		.mode = SPI_MODE_0,
+		.bus_num = 1,
 		.chip_select = 0,
-		.controller_data = (void *) 10, // SPI2_CS_0 is not available on gpio HEADER, use any other GPIO CS pin
-		.platform_data = (void *) &spi2_gpio_data,
+		.controller_data = (void *) &rda_spi1_params,
+		.platform_data = (void *) &rda_spi1,
 	},
 #ifdef CONFIG_CAN_MCP251X
 	{
 		.modalias = "mcp2510", // driver name
-		.max_speed_hz = 1000000,
-		.mode = SPI_MODE_0,
-		.bus_num = 2, // mcp251x on spi2 CS_1
+		.max_speed_hz = 20000000,
+		.mode = SPI_MODE_2,
+		.bus_num = 1, // mcp251x on spi1 CS_1
 		.chip_select = 1,
-		.controller_data = (void *) 6, // CS pin
+		.controller_data = (void *) &mcp251x_spi,
 		.platform_data = (void *) &mcp251x_info,
 		.irq = 50,	// mcp2515 Interrupt pin on D02 ( GPIO 66) ( H26) = RDA_IRQ_NB + RDA_GPIO_BANK_IRQ * (Bank -1) + pin offset
 	},
 #else
 	{
 		.modalias = "spidev", // driver name
-		.max_speed_hz = 1000000,
-		.mode = SPI_MODE_0,
-		.bus_num = 2, // spi2 CS_1
+		.max_speed_hz = 20000000,
+		.mode = SPI_MODE_2,
+		.bus_num = 1, // spi2 CS_1
 		.chip_select = 1,
-		.controller_data = (void *) 6, // CS pin
-		.platform_data = (void *) &spi2_gpio_data,
+		.controller_data = (void *) &rda_spi1_params,
+		.platform_data = (void *) &rda_spi1,
 	},
 #endif
 };
@@ -1685,7 +1730,7 @@ static struct platform_device *devices[] __initdata = {
 #endif
 	&rda_spi0,
 	&rda_spi1,
-	&rda_spi2_gpio,
+//	&rda_spi2_gpio,
 	&rda_vibrator,
 	&rda_power_supply,
 #ifdef CONFIG_LEDS_RDA
