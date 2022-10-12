@@ -394,22 +394,22 @@ EOF
 
 add_gpio_service() {
 	# GPIO fixup
-	#curl -k -L -o "$DEST/usr/local/sbin/gpio_fixup.sh" https://raw.githubusercontent.com/MehdiZAABAR/OrangePi-I96-Work/master/OrangePiRDA/output/rootfs/usr/local/sbin/gpio_fixup.sh
-	#chmod +x "$DEST/usr/local/sbin/gpio_fixup.sh"
+	curl -k -L -o "$DEST/usr/local/sbin/gpio_fixup.sh" https://raw.githubusercontent.com/MehdiZAABAR/OrangePi-I96-Work/master/OrangePiRDA/output/rootfs/usr/local/sbin/gpio_fixup.sh
+	chmod +x "$DEST/usr/local/sbin/gpio_fixup.sh"
 	curl -k -L -o "$DEST/usr/local/bin/opio" https://wiki.pbeirne.com/patb/opio/raw/master/opio
 	chmod +x "$DEST/usr/local/bin/opio"
 	curl -k -L -o "$DEST/usr/local/bin/devmem2.py" https://wiki.pbeirne.com/patb/i96/raw/master/devmem2.py
 	chmod +x "$DEST/usr/local/bin/devmem2.py"
-# 	cat >"$DEST/lib/systemd/system/gpio_fixup.service" <<EOF
-# [Unit]
-# Description=OrangePi GPIO Fixup
+ 	cat >"$DEST/lib/systemd/system/gpio_fixup.service" <<EOF
+[Unit]
+Description=OrangePi GPIO Fixup
 
-# [Service]
-# ExecStart=/usr/local/sbin/gpio_fixup.sh
+[Service]
+ExecStart=/usr/local/sbin/gpio_fixup.sh
 
-# [Install]
-# WantedBy=multi-user.target
-# EOF
+[Install]
+WantedBy=multi-user.target
+EOF
 	cat >"$DEST/type-phase" <<EOF
 #!/bin/bash
 

@@ -55,6 +55,7 @@ Ubuntu is not building correctly yet.<br>
 
 <h2>Version History</h2>
 <ol>
+  <li>October 12th 2022 - V1.32 - Restore gpio_fixup service</li>
   <li>October 12th 2022 - V1.31 - Add USB Bluetooth driver support</li>
   <li>October 12th 2022 - V1.30 - Add CAN module support for native SPI without kernel rebuild (thanks MZA, <a href="https://github.com/MehdiZAABAR/OrangePi-I96-Work/">OrangePi-I96-Work</a>), Add libarchive-tools dependency to builder, remove gpio_fixup.sh as the board configuration has been corrected</li>
   <li>September 28th 2022 - V1.29 - Adjust lower bound of txpower curve to improve WiFi stability -- you can increase WiFi debugging verbosity with echo 4 > /sys/kernel/debug/rdawfmac/mmc*/dbglevel.  You can use 5 for the highest level of verbosity to help debug the driver (still lots of problems to find / solve and this will help see what the driver is doing)</li>
