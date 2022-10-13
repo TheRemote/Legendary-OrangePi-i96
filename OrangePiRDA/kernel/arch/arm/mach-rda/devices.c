@@ -1642,7 +1642,7 @@ static struct spi_board_info rda_spi_board_info[] = {
 	},
 #ifdef CONFIG_CAN_MCP251X
 	{
-		.modalias = "mcp2510", // driver name
+		.modalias = "mcp2515", // driver name
 		.max_speed_hz = 20000000,
 		.mode = SPI_MODE_2,
 		.bus_num = 1, // mcp251x on spi1 CS_1

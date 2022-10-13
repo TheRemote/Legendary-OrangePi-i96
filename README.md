@@ -55,6 +55,7 @@ Ubuntu is not building correctly yet.<br>
 
 <h2>Version History</h2>
 <ol>
+  <li>October 13th 2022 - V1.33 - More spidev and CAN module improvements (thanks MZA)</li>
   <li>October 12th 2022 - V1.32 - Restore gpio_fixup service</li>
   <li>October 12th 2022 - V1.31 - Add USB Bluetooth driver support</li>
   <li>October 12th 2022 - V1.30 - Add CAN module support for native SPI without kernel rebuild (thanks MZA, <a href="https://github.com/MehdiZAABAR/OrangePi-I96-Work/">OrangePi-I96-Work</a>), Add libarchive-tools dependency to builder, remove gpio_fixup.sh as the board configuration has been corrected</li>
