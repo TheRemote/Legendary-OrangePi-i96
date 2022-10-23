@@ -55,6 +55,7 @@ Ubuntu is not building correctly yet.<br>
 
 <h2>Version History</h2>
 <ol>
+  <li>October 23rd 2022 - V1.35 - Enabling thin provisioning and bridge kernel modules</li>
   <li>October 14th 2022 - V1.34 - Enable USB audio devices and USB ethernet devices kernel modules</li>
   <li>October 13th 2022 - V1.33 - More spidev and CAN module improvements (thanks MZA)</li>
   <li>October 12th 2022 - V1.32 - Restore gpio_fixup service</li>
