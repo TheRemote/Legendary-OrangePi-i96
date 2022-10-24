@@ -22,7 +22,7 @@ My blog post that birthed this image is located <a href="https://jamesachambers.
   <li>Fixed buggy UART not resetting properly which often breaks copying/pasting through a serial terminal</li>
   <li>Fixed sound issues that would prevent rebooting the system successfully after first startup</li>
   <li>Fixed GPIO permissions errors on startup</li>
-  <li>Fixed low entropy (random number) issues by installing haveged service</li>
+  <li>Fixed low entropy (random numb er) issues by installing haveged service</li>
   <li>Fixed orangepi user missing group membership for audio, bluetooth, netdev, gpio</li>
 </ol>
 
@@ -55,7 +55,8 @@ Ubuntu is not building correctly yet.<br>
 
 <h2>Version History</h2>
 <ol>
-  <li>October 23rd 2022 - V1.35 - Enabling thin provisioning and bridge kernel modules</li>
+  <li>October 24th 2022 - V1.36 - Fix USB audio kernel parameter, add more kernel parameters required by Docker</li>
+  <li>October 23rd 2022 - V1.35 - Enable thin provisioning and bridge kernel modules</li>
   <li>October 14th 2022 - V1.34 - Enable USB audio devices and USB ethernet devices kernel modules</li>
   <li>October 13th 2022 - V1.33 - More spidev and CAN module improvements (thanks MZA)</li>
   <li>October 12th 2022 - V1.32 - Restore gpio_fixup service</li>
