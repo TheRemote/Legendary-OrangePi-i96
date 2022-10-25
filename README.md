@@ -42,7 +42,7 @@ Press Ctrl+X then Y to save the file.
 <h2>Docker Instructions</h2>
 Docker will run on the image as of V1.36.  It requires the following change so that you don't get a service startup error:
 <pre>sudo update-alternatives --set iptables /usr/bin/iptables-legacy</pre>
-Now try starting the Docker service.  If it still won't start then clear everything out (will clear all containers):
+Now try starting the Docker service.  If it still won't start then clear everything out (warning: will clear all Docker containers and data so only do this if you are installing for the first time):
 <pre>sudo rm -rf /var/lib/docker/*
 sudo systemctl restart docker</pre>
 This will remove all of Docker's existing cache and regenerate it.  It should start but it will be slow the first startup since it will rebuild the cache we just cleared.
