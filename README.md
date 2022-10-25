@@ -14,6 +14,7 @@ My blog post that birthed this image is located <a href="https://jamesachambers.
   <li>Adds ability to use the i96 as a HID device (mouse/keyboard emulation)</li>
   <li>Add CAN module support (MCP251x tested so far)</li>
   <li>Fixed SD card port to support "High Speed" timing mode (can be seen with sudo cat /sys/kernel/debug/mmc0/ios)</li>
+  <li>Fixed Docker support (see Docker section below)</li>
   <li>Fixed TRIM support (sudo fstrim -av)</li>
   <li>Fixed notorious WiFi issues caused by missing crda package and no regulatory domain set (see first startup instructions to set REGDOMAIN)</li>
   <li>Fixed Bluetooth and set it up to work at startup using bluetooth patchram utility</li>
@@ -37,6 +38,14 @@ Set wireless regulatory country:
 <pre>sudo nano /etc/default/crda</pre>
 Add your two letter country code (mine is US) to the end of the bottom line (after the equals sign) that says REGDOMAIN=<br>
 Press Ctrl+X then Y to save the file.
+
+<h2>Docker Instructions</h2>
+Docker will run on the image as of V1.36.  It requires the following change so that you don't get a service startup error:
+<pre>sudo update-alternatives --set iptables /usr/bin/iptables-legacy</pre>
+Now try starting the Docker service.  If it still won't start then clear everything out (will clear all containers):
+<pre>sudo rm -rf /var/lib/docker/*
+sudo systemctl restart docker</pre>
+This will remove all of Docker's existing cache and regenerate it.  It should start but it will be slow the first startup since it will rebuild the cache we just cleared.
 
 <h2>Build Instructions</h2>
 You should first clone the OrangePi_Build repository:<br>
