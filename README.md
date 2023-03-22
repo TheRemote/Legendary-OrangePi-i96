@@ -64,6 +64,7 @@ Ubuntu is not building correctly yet.<br>
 
 <h2>Version History</h2>
 <ol>
+  <li>March 22nd 2023 - V1.37 - Update packages, add fixed version of serial adapter driver (thanks Nyanna, <a href="https://github.com/TheRemote/Legendary-OrangePi-i96/pull/6">PR #6</a>)</li>
   <li>October 24th 2022 - V1.36 - Fix USB audio kernel parameter, add more kernel parameters required by Docker</li>
   <li>October 23rd 2022 - V1.35 - Enable thin provisioning and bridge kernel modules</li>
   <li>October 14th 2022 - V1.34 - Enable USB audio devices and USB ethernet devices kernel modules</li>
